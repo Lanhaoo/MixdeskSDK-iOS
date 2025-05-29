@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="22155" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22131"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MXWebViewViewController">
+            <connections>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+                <outlet property="webView" destination="fWc-SP-L1y" id="mCz-YB-P4d"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <wkWebView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fWc-SP-L1y">
+                    <rect key="frame" x="0.0" y="59" width="393" height="759"/>
+                    <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <wkWebViewConfiguration key="configuration">
+                        <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
+                        <wkPreferences key="preferences"/>
+                    </wkWebViewConfiguration>
+                </wkWebView>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="Q5M-cg-NOt"/>
+            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+            <constraints>
+                <constraint firstItem="fWc-SP-L1y" firstAttribute="leading" secondItem="Q5M-cg-NOt" secondAttribute="leading" id="0vE-b9-JRq"/>
+                <constraint firstItem="Q5M-cg-NOt" firstAttribute="trailing" secondItem="fWc-SP-L1y" secondAttribute="trailing" id="46n-hm-JYX"/>
+                <constraint firstItem="Q5M-cg-NOt" firstAttribute="bottom" secondItem="fWc-SP-L1y" secondAttribute="bottom" id="STj-wS-ltx"/>
+                <constraint firstItem="fWc-SP-L1y" firstAttribute="bottom" secondItem="Q5M-cg-NOt" secondAttribute="bottom" id="TLN-xQ-Knn"/>
+                <constraint firstItem="fWc-SP-L1y" firstAttribute="top" secondItem="Q5M-cg-NOt" secondAttribute="top" id="iJb-SZ-agZ"/>
+                <constraint firstItem="fWc-SP-L1y" firstAttribute="trailing" secondItem="Q5M-cg-NOt" secondAttribute="trailing" id="ixq-7h-TOj"/>
+                <constraint firstItem="fWc-SP-L1y" firstAttribute="top" secondItem="Q5M-cg-NOt" secondAttribute="top" id="mtH-x6-Yme"/>
+                <constraint firstItem="fWc-SP-L1y" firstAttribute="leading" secondItem="Q5M-cg-NOt" secondAttribute="leading" id="sAj-4e-zdz"/>
+            </constraints>
+            <point key="canvasLocation" x="79" y="-12"/>
+        </view>
+    </objects>
+    <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

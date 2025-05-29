@@ -24,6 +24,6 @@ DerivedData
 # http://guides.cocoapods.org/using/using-cocoapods.html#should-i-ignore-the-pods-directory-in-source-control
 #
 #Pods/
-Meiqia-SDK-files/MeiQiaSDK.framework/_CodeSignature
+Mixdesk-SDK-files/MixdeskSDK.framework/_CodeSignature
 fastlane/Appfile
-Meiqia-SDK-Demo.app.dSYM.zip
+Mixdesk-SDK-Demo.app.dSYM.zip

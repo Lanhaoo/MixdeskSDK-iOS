@@ -1,0 +1,6 @@
+framework module MixdeskSDK {
+  umbrella header "MixdeskSDK.h"
+  export *
+
+  module * { export * }
+}
