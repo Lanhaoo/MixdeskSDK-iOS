@@ -35,8 +35,8 @@ platform :ios do
     bump_up_build_number
 
     gym(
-      scheme: "Meiqia-SDK-Demo",
-      project: "Meiqia-SDK-Demo/Meiqia-SDK-Demo.xcodeproj",
+      scheme: "Mixdesk-SDK-Demo",
+      project: "Mixdesk-SDK-Demo/Mixdesk-SDK-Demo.xcodeproj",
       
     ) # Build your app - more options available
     
@@ -55,7 +55,7 @@ platform :ios do
     
     increment_build_number(
       build_number: ENV['CI_BUILD_ID'],
-      xcodeproj: 'Meiqia-SDK-Demo/Meiqia-SDK-Demo.xcodeproj'
+      xcodeproj: 'Mixdesk-SDK-Demo/Mixdesk-SDK-Demo.xcodeproj'
     )
   end
 
@@ -63,7 +63,7 @@ platform :ios do
   lane :release do
     # match(type: "appstore")
     # snapshot
-    gym(scheme: "Meiqia-SDK-Demo") # Build your app - more options available
+    gym(scheme: "Mixdesk-SDK-Demo") # Build your app - more options available
     deliver(force: true)
     # frameit
   end
