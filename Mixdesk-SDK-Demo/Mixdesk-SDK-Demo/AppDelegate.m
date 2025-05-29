@@ -55,9 +55,8 @@
 
 #pragma mark  集成第一步: 初始化,  参数:appkey
 - (void)initMixdeskSDK {
-    // mixdesk 1 712339b0ab98565a51cf93b66628e081
     __weak typeof(self) weakSelf = self;
-    [MXManager initWithAppkey:@"20ae5a63dca0e1a10d858cb47aa74e96" completion:^(NSString *clientId, NSError *error) {
+    [MXManager initWithAppkey:@"" completion:^(NSString *clientId, NSError *error) {
         if (!error) {
             weakSelf.mxRegisterState = YES;
             [[MXNotificationManager sharedManager] openMXGroupNotificationServer];
