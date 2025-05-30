@@ -11,7 +11,7 @@ Pod::Spec.new do |s|
   s.name             = "Mixdesk"
   s.version          = "1.0.0"
   s.summary          = "Mixdesk官方 SDK for iOS"
-  s.description      = "Mixdesk官方的 iOS SDK"
+  s.description      = "Mixdesk官方的 iOS SDK, 可接入Mixdesk系统"
 
   s.homepage         = "https://github.com/Mixdesk/MixdeskSDK-iOS"
   s.license          = 'MIT'
@@ -38,7 +38,7 @@ Pod::Spec.new do |s|
     ss.vendored_libraries = 'Mixdesk-SDK-files/MXChatViewController/Vendors/MLAudioRecorder/amr_en_de/lib/libopencore-amrnb.a', 'Mixdesk-SDK-files/MXChatViewController/Vendors/MLAudioRecorder/amr_en_de/lib/libopencore-amrwb.a'
     #ss.preserve_path = '**/libopencore-amrnb.a', '**/libopencore-amrwb.a'
     ss.xcconfig = { "LIBRARY_SEARCH_PATHS" => "\"$(PODS_ROOT)/Mixdesk/Mixdesk-SDK-files\"" }
-    ss.resources = 'Mixdesk-SDK-files/MXChatViewController/Assets/MixdeskChatViewAsset.bundle'
+    ss.resources = 'Mixdesk-SDK-files/MXChatViewController/Assets/MXChatViewAsset.bundle'
   end
   
   
