@@ -36,7 +36,6 @@ edition: m2025
 
 - 后期 sdk更新会很方便.
 - 手动更新你需要删除旧库,下载新库,再重新配置等很麻烦,且由于删除旧库时未删除干净,再迁入新库时会导致很多莫名其妙的问题. 
-- CocoaPods的安装使用很简单,简书上的教程一大堆.
 - Swift项目已经完美支持CocoPods
 
 ##1.1  CocoaPods 导入
@@ -162,7 +161,7 @@ Mixdesk SDK 的实现，依赖了一些系统框架，在开发应用时，要�
 
 # 三 说好的推送呢
 
-当前仅支持一种推送方案，当APP切换到后台时,mixdesk服务端发送消息至开发者的服务端，开发者再通过极光等第三方推送推送消息到 App，可见 [SDK 工作流程](#SDK-工作流程) 。
+当前仅支持一种推送方案，当APP切换到后台时,mixdesk服务端发送消息至开发者的服务端，开发者再通过极光等第三方推送推送消息到 App，可见 [SDK 工作流程](#SDK工作流程) 。
 
 设置服务器地址，请使用mixdesk管理员帐号登录 [mixdesk](http://www.mixdesk.com)，在「设置」 -\> 「SDK」中设置。
 
@@ -193,12 +192,11 @@ request.body 为消息数据，数据结构为：
 |customizedData|开发者上传的自定义的属性|
 |type|消息类型 - mesage 普通消息 / ending 结束消息|
 
-开发者可以根据请求中的签名，对推送消息进行数据验证，Mixdesk提供了 `Java、Python、Ruby、JavaScript、PHP` 5种语言的计算签名的代码，具体请移步 [Mixdesk SDK 3.0 推送的数据结构签名算法](https://github.com/Mixdesk/MixdeskSDK-Push-Signature-Example)。
+开发者可以根据请求中的签名，对推送消息进行数据验证，Mixdesk提供了 `Java、Python、Ruby、JavaScript、PHP` 5种语言的计算签名的代码，具体请移步 [Mixdesk SDK 1.0 推送的数据结构签名算法](https://github.com/Mixdesk/MixdeskSDK-Push-Signature-Example)。
 
 #至此,集成结束.
 
-
-# 四  SDK 工作流程
+# 四 SDK工作流程
 
 mixdesk SDK 的工作流程如下图所示。
 
