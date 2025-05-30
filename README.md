@@ -379,7 +379,7 @@ MXChatViewManager *chatViewManager = [[MXChatViewManager alloc] init];
     <string>en</string>
 </array>
 ```
-开源聊天界面的更多配置，可参见 [MXChatViewManager.h](https://github.com/Mixdesk/MXChatViewController/blob/master/MXChatViewControllerDemo/MXChatViewController/Config/MXChatViewManager.h) 文件。
+开源聊天界面的更多配置，可参见 [MXChatViewManager.h](https://github.com/Mixdesk/MixdeskSDK-iOS/blob/master/Mixdesk-SDK-files/MXChatViewController/Config/MXChatViewManager.h) 文件。
 
 # 六 mixdesk API 接口介绍
 
