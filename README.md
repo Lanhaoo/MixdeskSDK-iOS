@@ -313,7 +313,6 @@ MXChatViewManager *chatViewManager = [[MXChatViewManager alloc] init];
 
 **注意**
 * 该选项需要在用户上线前设置。
-* 客服组 ID 和客服 ID 可以通过管理员帐号在后台的「设置」中查看。
 
 ![查看ID](https://github.com/Mixdesk/MixdeskSDK-iOS/blob/master/resources/img/1667446915131.png)
 
@@ -379,6 +378,7 @@ MXChatViewManager *chatViewManager = [[MXChatViewManager alloc] init];
     <string>en</string>
 </array>
 ```
+
 开源聊天界面的更多配置，可参见 [MXChatViewManager.h](https://github.com/Mixdesk/MixdeskSDK-iOS/blob/master/Mixdesk-SDK-files/MXChatViewController/Config/MXChatViewManager.h) 文件。
 
 # 六 mixdesk API 接口介绍
@@ -413,12 +413,6 @@ mixdesk需要获取每个设备的 deviceToken，才能在 App 进入后台以�
 ### 关闭 mixdesk 推送
 
 详细介绍请见 [消息推送](#三说好的推送呢)。
-
-
-### 指定分配客服和客服组接口
-
-该接口上文已有介绍，请见 [指定分配客服和客服组](#指定分配客服和客服组)。
-
 
 ### 让当前的联系人上线。
 
@@ -688,23 +682,11 @@ MXAgent *agent = [MXManager getCurrentAgent];
 
 接收Mixdesk SDK 离线消息的服务器即为 `开发者的推送消息服务器`。
 
-
-### 客服 id
-
-Mixdesk企业每一位注册客服均有一个唯一 id。通过此 id 开发者可用 SDK 接口指定分配对话给该客服。
-
-
-### 客服组 id
-
-Mixdesk工作台支持为不同的客服分组，每一个组都有一个唯一id。通过此 id 开发者可用 SDK 接口指定分配对话给该客服组。
-
-
 ### Mixdesk联系人 id
 
 Mixdesk SDK 在上线后（或称为分配对话后），均有一个唯一 id。
 
 开发者可保存此 id，在其他设备上进行上线操作。这样此 id 的联系人信息和历史对话，都会同步到其他设备。
-
 
 ### 开发者自定义 id
 
@@ -726,7 +708,6 @@ Mixdesk SDK 在上线后（或称为分配对话后），均有一个唯一 id�
 - [键盘弹起后输入框和键盘之间有偏移](#键盘弹起后输入框和键盘之间有偏移)
 - [如何得到客服 id 或客服分组 id](#如何得到客服id或客服分组id)
 - [如何在聊天界面之外监听新消息的通知](#如何在聊天界面之外监听新消息的通知)
-- [指定分配客服/客服组失效](#指定分配客服/客服组失效)
 - [第三方库冲突](#第三方库冲突)
 - [工作台联系人信息显示应用的名称不正确](#工作台联系人信息显示应用的名称不正确)
 - [编译中出现 undefined symbols](#编译中出现-undefined-symbols)
@@ -801,10 +782,6 @@ Mixdesk开源的聊天界面用的是系统的 `UINavgationController`，所以�
 ## 如何在聊天界面之外监听新消息的通知
 
 请查看 [如何监听监听收到消息的广播](#监听收到消息的广播)。
-
-## 指定分配客服/客服组失效
-
-请查看指定的客服的服务联系人的上限是否被设置成了0，或服务联系人的数量是否已经超过服务上限。查看位置为：`工作台 - 设置 - 客服与分组 - 点击某客服`
 
 ## 第三方库冲突
 
