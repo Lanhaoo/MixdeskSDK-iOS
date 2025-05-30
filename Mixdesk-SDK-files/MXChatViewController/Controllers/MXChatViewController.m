@@ -658,6 +658,9 @@ static CGFloat const kMXChatViewInputBarHeight = 80.0;
                 forControlEvents:UIControlEventTouchUpInside];
             strongSelf.navigationItem.rightBarButtonItem =
                 [[UIBarButtonItem alloc] initWithCustomView:btn];
+          } else {
+            // 直接隐藏
+            strongSelf.navigationItem.rightBarButtonItem = nil;
           }
         }];
     return;

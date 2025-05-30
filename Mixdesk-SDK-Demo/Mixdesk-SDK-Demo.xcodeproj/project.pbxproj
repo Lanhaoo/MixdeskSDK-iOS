@@ -12,7 +12,6 @@
 		4D1C64CB2DE7FB1E00F0EFC0 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D1C64CA2DE7FB1E00F0EFC0 /* libsqlite3.tbd */; };
 		4D1C64CC2DE7FDCB00F0EFC0 /* libopencore-amrnb.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DBAB1962DE6D952001B584E /* libopencore-amrnb.a */; };
 		4D1C64CD2DE7FDCB00F0EFC0 /* libopencore-amrwb.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DBAB1972DE6D952001B584E /* libopencore-amrwb.a */; };
-		4D373F6F2DE7216A000A7816 /* MixdeskSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D373F6E2DE7216A000A7816 /* MixdeskSDK.framework */; };
 		4D373F7E2DE72872000A7816 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D373F7D2DE72872000A7816 /* Accelerate.framework */; };
 		4D373F7F2DE7292E000A7816 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DBAADB52DE6C1D8001B584E /* AppDelegate.m */; };
 		4D373F802DE7292E000A7816 /* DevelopViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DBAADB82DE6C1D8001B584E /* DevelopViewController.m */; };
@@ -182,6 +181,7 @@
 		4DBAB2B22DE6FAEA001B584E /* DevelopViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DBAADB82DE6C1D8001B584E /* DevelopViewController.m */; };
 		4DBAB2B32DE6FAEF001B584E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DBAADB52DE6C1D8001B584E /* AppDelegate.m */; };
 		4DBAB2B42DE6FB2A001B584E /* MXEcoboostSDK_testUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DBAADCD2DE6C1D8001B584E /* MXEcoboostSDK_testUITests.m */; };
+		4DC0461C2DE957F8001802A6 /* MixdeskSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DC0461B2DE957F8001802A6 /* MixdeskSDK.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -218,7 +218,6 @@
 		4D1C64C62DE7FB0D00F0EFC0 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.2.sdk/usr/lib/libz.tbd; sourceTree = DEVELOPER_DIR; };
 		4D1C64C82DE7FB1500F0EFC0 /* libicucore.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libicucore.tbd; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.2.sdk/usr/lib/libicucore.tbd; sourceTree = DEVELOPER_DIR; };
 		4D1C64CA2DE7FB1E00F0EFC0 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.2.sdk/usr/lib/libsqlite3.tbd; sourceTree = DEVELOPER_DIR; };
-		4D373F6E2DE7216A000A7816 /* MixdeskSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = MixdeskSDK.framework; sourceTree = "<group>"; };
 		4D373F7D2DE72872000A7816 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		4D556F432DE71C8700F7D600 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		4D994F432DE71CE7007A3334 /* libicucore.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libicucore.tbd; path = usr/lib/libicucore.tbd; sourceTree = SDKROOT; };
@@ -554,6 +553,7 @@
 		4DBAB2092DE6DCCC001B584E /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		4DBAB2A82DE6FABD001B584E /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.2.sdk/System/Library/Frameworks/CoreTelephony.framework; sourceTree = DEVELOPER_DIR; };
 		4DBAB2AA2DE6FAC4001B584E /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.2.sdk/System/Library/Frameworks/Accelerate.framework; sourceTree = DEVELOPER_DIR; };
+		4DC0461B2DE957F8001802A6 /* MixdeskSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = MixdeskSDK.framework; sourceTree = "<group>"; };
 		CCE9D1061C1812F6004E862E /* Mixdesk-SDK-Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Mixdesk-SDK-Demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CCE9D11F1C1812F6004E862E /* Mixdesk-SDK-DemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Mixdesk-SDK-DemoTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CCE9D12A1C1812F6004E862E /* Mixdesk-SDK-DemoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Mixdesk-SDK-DemoUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -570,10 +570,10 @@
 				4D994F462DE71CF5007A3334 /* libsqlite3.tbd in Frameworks */,
 				4D994F442DE71CE7007A3334 /* libicucore.tbd in Frameworks */,
 				4D556F442DE71C8700F7D600 /* libz.tbd in Frameworks */,
-				4D373F6F2DE7216A000A7816 /* MixdeskSDK.framework in Frameworks */,
 				4D373F7E2DE72872000A7816 /* Accelerate.framework in Frameworks */,
 				4DBAB2042DE6DCA7001B584E /* MobileCoreServices.framework in Frameworks */,
 				4DBAB2062DE6DCAF001B584E /* SystemConfiguration.framework in Frameworks */,
+				4DC0461C2DE957F8001802A6 /* MixdeskSDK.framework in Frameworks */,
 				4DBAB2082DE6DCB8001B584E /* CoreTelephony.framework in Frameworks */,
 				4DBAB20A2DE6DCCC001B584E /* AVFoundation.framework in Frameworks */,
 			);
@@ -1362,7 +1362,7 @@
 		4DBAB1FA2DE6D952001B584E /* Mixdesk-SDK-files */ = {
 			isa = PBXGroup;
 			children = (
-				4D373F6E2DE7216A000A7816 /* MixdeskSDK.framework */,
+				4DC0461B2DE957F8001802A6 /* MixdeskSDK.framework */,
 				4DBAB0992DE6D952001B584E /* MixdeskSDKViewInterface */,
 				4DBAB1F32DE6D952001B584E /* MXChatViewController */,
 				4DBAB1F82DE6D952001B584E /* Notification */,
