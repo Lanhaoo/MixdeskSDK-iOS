@@ -246,7 +246,7 @@ NSDictionary* clientCustomizedAttrs = @{
  */
 [chatViewManager setClientInfo:clientCustomizedAttrs override:YES];
 或者
-[MQManager setClientInfo:clientCustomizedAttrs completion:^(BOOL success) {
+[MXManager setClientInfo:clientCustomizedAttrs completion:^(BOOL success) {
 }];
 ```
 
@@ -273,7 +273,7 @@ Mixdesk工作台设置群发任务，通过 SDK 渠道给目标联系人群发�
 开启群发功能
 
 ```objc
-  [[MQNotificationManager sharedManager] openMQGroupNotificationServer];
+  [[MXNotificationManager sharedManager] openMXGroupNotificationServer];
 ```
 
 群发功能的目标联系人需要有对应的联系人信息，所以需要先配置联系人对应的[自定义信息](#添加自定义信息)
@@ -286,9 +286,9 @@ Mixdesk工作台设置群发任务，通过 SDK 渠道给目标联系人群发�
 
 ```objc
     // 开启自定义响应事件
-  [MQNotificationManager sharedManager].handleNotification = YES;
+  [MXNotificationManager sharedManager].handleNotification = YES;
 ```
-在需要处理响应的地方，监听通知 MQ_CLICK_GROUP_NOTIFICATION
+在需要处理响应的地方，监听通知 MX_CLICK_GROUP_NOTIFICATION
 
 **注意**
 * 开启自定义响应事件以后，需要自己通过监听通知来处理响应事件，否则点击群发消息以后会没有反应。
@@ -300,7 +300,7 @@ Mixdesk默认会按照管理员设置的分配方式智能分配客服，但如�
 如果您使用Mixdesk提供的 UI ，可对 UI 进行如下配置，进行指定分配：
 
 ```objc
-MQChatViewManager *chatViewManager = [[MQChatViewManager alloc] init];
+MXChatViewManager *chatViewManager = [[MXChatViewManager alloc] init];
 [chatViewManager setScheduledAgentId:agentToken];
 ```
 
@@ -308,7 +308,7 @@ MQChatViewManager *chatViewManager = [[MQChatViewManager alloc] init];
 
 ```objc
 //分配到指定客服，或指定组里面的客服，指定客服优先级高，并可选择分配失败后的转接规则
-[MQManager setScheduledAgentWithAgentId:agentId agentGroupId:agentGroupId scheduleRule:rule];
+[MXManager setScheduledAgentWithAgentId:agentId agentGroupId:agentGroupId scheduleRule:rule];
 ```
 
 **注意**
@@ -324,8 +324,8 @@ MQChatViewManager *chatViewManager = [[MQChatViewManager alloc] init];
 
 ```objc
 //当用户需要使用客服服务时，创建并退出视图
-MQChatViewManager *chatViewManager = [[MQChatViewManager alloc] init];
-[chatViewManager pushMQChatViewControllerInViewController:self];
+MXChatViewManager *chatViewManager = [[MXChatViewManager alloc] init];
+[chatViewManager pushMXChatViewControllerInViewController:self];
 ```
 
 **注意**，此时使用Mixdesk 初始化SDK后的联系人进行上线。如果开发者需要指定联系人上线，可参考:
@@ -334,7 +334,7 @@ MQChatViewManager *chatViewManager = [[MQChatViewManager alloc] init];
 
 [设置登录客服的联系人 id](#设置登录客服的联系人-id)
 
-`MQServiceToViewInterface` 文件是开源聊天界面调用Mixdesk SDK 接口的中间层，目的是剥离开源界面中的Mixdesk业务逻辑。这样就能让该聊天界面用于非Mixdesk项目中，开发者只需要实现 `MQServiceToViewInterface` 中的方法，即可将自己项目的业务逻辑和该聊天界面对接。
+`MXServiceToViewInterface` 文件是开源聊天界面调用Mixdesk SDK 接口的中间层，目的是剥离开源界面中的Mixdesk业务逻辑。这样就能让该聊天界面用于非Mixdesk项目中，开发者只需要实现 `MXServiceToViewInterface` 中的方法，即可将自己项目的业务逻辑和该聊天界面对接。
 
 ## 开启同步服务端消息设置
 
@@ -345,10 +345,10 @@ MQChatViewManager *chatViewManager = [[MQChatViewManager alloc] init];
 由于联系人可能在多设备聊天，关闭消息同步后获取的历史消息，将可能少于服务端的历史消息。
 
 ```objc
-MQChatViewManager *chatViewManager = [[MQChatViewManager alloc] init];
+MXChatViewManager *chatViewManager = [[MXChatViewManager alloc] init];
 //开启同步消息
 [chatViewManager enableSyncServerMessage:true];
-[chatViewManager pushMQChatViewControllerInViewController:self];
+[chatViewManager pushMXChatViewControllerInViewController:self];
 ```
 
 ### 设置登录客服的联系人 id
@@ -479,7 +479,7 @@ NSString *clientId = [MXManager getCurrentClientId];
 开发者可选择将该 id 保存并与 App 的用户绑定。
 
 ```objc
-[MQManager createClient:^(BOOL success, NSString *clientId) {
+[MXManager createClient:^(BOOL success, NSString *clientId) {
 //开发者可保存该clientId
 }];
 ```
@@ -488,7 +488,7 @@ NSString *clientId = [MXManager getCurrentClientId];
 ### 设置联系人离线
 
 ```objc
-NSString *clientId = [MQManager setClientOffline];
+NSString *clientId = [MXManager setClientOffline];
 ```
 
 如果没有设置联系人离线，开发者设置的代理将收到即时消息，并收到新消息产生的广播。开发者可以监听此 notification，用于显示小红点未读标记。
@@ -508,10 +508,10 @@ NSString *clientId = [MQManager setClientOffline];
 
 ``` 
 ### 在合适的地方监听有新消息的广播
-[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveNewMQMessages:) name:MQ_RECEIVED_NEW_MESSAGES_NOTIFICATION object:nil];
+[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveNewMXMessages:) name:MX_RECEIVED_NEW_MESSAGES_NOTIFICATION object:nil];
 
 ### 监听收到Mixdesk聊天消息的广播
-- (void)didReceiveNewMQMessages:(NSNotification *)notification {
+- (void)didReceiveNewMXMessages:(NSNotification *)notification {
 //广播中的消息数组
 NSArray *messages = [notification.userInfo objectForKey:@"messages"];
 NSLog(@"监听到了收到客服消息的广播");
@@ -524,7 +524,7 @@ NSLog(@"监听到了收到客服消息的广播");
 开发者可用此接口获取当前正在接待联系人的客服信息：
 
 ```
-MQAgent *agent = [MQManager getCurrentAgent];
+MXAgent *agent = [MXManager getCurrentAgent];
 ```
 
 
@@ -538,7 +538,7 @@ MQAgent *agent = [MQManager getCurrentAgent];
 开发者可用此接口获取服务端的历史消息：
 
 ```objc
-[MQManager getServerHistoryMessagesWithUTCMsgDate:firstMessageDate messagesNumber:messageNumber success:^(NSArray<MQMessage *> *messagesArray) {
+[MXManager getServerHistoryMessagesWithUTCMsgDate:firstMessageDate messagesNumber:messageNumber success:^(NSArray<MXMessage *> *messagesArray) {
 //显示获取到的消息等逻辑
 } failure:^(NSError *error) {
 //进行错误处理
@@ -553,7 +553,7 @@ MQAgent *agent = [MQManager getCurrentAgent];
 由于使用 [从服务端获取更多消息](#从服务端获取更多消息)接口，会产生数据流量，开发者也可使用此接口来获取 iOS SDK 本地的历史消息。
 
 ```objc
-[MQManager getDatabaseHistoryMessagesWithMsgDate:firstMessageDate messagesNumber:messageNumber result:^(NSArray<MQMessage *> *messagesArray) {
+[MXManager getDatabaseHistoryMessagesWithMsgDate:firstMessageDate messagesNumber:messageNumber result:^(NSArray<MXMessage *> *messagesArray) {
 //显示获取到的消息等逻辑
 }];
 ```
@@ -564,7 +564,7 @@ MQAgent *agent = [MQManager getCurrentAgent];
 
 开发者可能注意到了，使用上面提到的3个联系人上线接口，都有一个参数是`设置接收消息的代理`，开发者可在此设置接收消息的代理，由代理来接收消息。
 
-设置代理后，实现 `MQManagerDelegate` 中的 `didReceiveMQMessage:` 方法，即可通过这个代理函数接收消息。
+设置代理后，实现 `MXManagerDelegate` 中的 `didReceiveMXMessage:` 方法，即可通过这个代理函数接收消息。
 
 
 ### 发送消息
@@ -572,7 +572,7 @@ MQAgent *agent = [MQManager getCurrentAgent];
 开发者调用此接口来发送**文字消息**：
 
 ```objc
-[MQManager sendTextMessageWithContent:content completion:^(MQMessage *sendedMessage) {
+[MXManager sendTextMessageWithContent:content completion:^(MXMessage *sendedMessage) {
 //消息发送成功后的处理
 }];
 ```
@@ -580,7 +580,7 @@ MQAgent *agent = [MQManager getCurrentAgent];
 开发者调用此接口来发送**图片消息**：
 
 ```objc
-[MQManager sendImageMessageWithImage:image completion:^(MQMessage *sendedMessage) {
+[MXManager sendImageMessageWithImage:image completion:^(MXMessage *sendedMessage) {
 //消息发送成功后的处理
 }];
 ```
@@ -588,26 +588,26 @@ MQAgent *agent = [MQManager getCurrentAgent];
 开发者调用此接口来发送**语音消息**：
 
 ```objc
-[MQManager sendAudioMessage:audioData completion:^(MQMessage *sendedMessage, NSError *error) {
+[MXManager sendAudioMessage:audioData completion:^(MXMessage *sendedMessage, NSError *error) {
 //消息发送成功后的处理
 }];
 ```
 开发者调用此接口来发送**视频消息**：
 
 ```objc
-[MQManager sendVideoMessage:filePath completion:^(MQMessage *sendedMessage, NSError *error) {
+[MXManager sendVideoMessage:filePath completion:^(MXMessage *sendedMessage, NSError *error) {
 //消息发送成功后的处理
 }];
 ```
 开发者调用此接口来发送**商品卡片消息**：
 
 ```objc
-+ (MQMessage *)sendProductCardMessageWithPictureUrl:(NSString *)pictureUrl
++ (MXMessage *)sendProductCardMessageWithPictureUrl:(NSString *)pictureUrl
                                          title:(NSString *)title
                                          descripation:(NSString *)descripation
                                          productUrl:(NSString *)productUrl
                                          salesCount:(long)salesCount
-                               completion:(void (^)(MQMessage *sendedMessage, NSError *error)) {
+                               completion:(void (^)(MXMessage *sendedMessage, NSError *error)) {
 //消息发送成功后的处理
 }];
 ```
@@ -618,7 +618,7 @@ MQAgent *agent = [MQManager getCurrentAgent];
 
 ```objc
     // 自定义商品卡片响应事件
-    MQChatViewManager *chatViewManager = [[MQChatViewManager alloc] init];
+    MXChatViewManager *chatViewManager = [[MXChatViewManager alloc] init];
     [chatViewManager didTapProductCard:^(NSString *productUrl) {
         NSLog(@"商品卡片的响应链接：%@",productUrl);
     }];
@@ -627,12 +627,12 @@ MQAgent *agent = [MQManager getCurrentAgent];
 ### 获取未读消息数
 
 开发者使用此接口来统一获取所有的未读消息，用户可以在需要显示未读消息数是调用此接口，此接口会自动判断并合并本地和服务器上的未读消息，当用户进入聊天界面后，未读消息将会清零。
-`[MQManager getUnreadMessagesWithCompletion:completion]`
+`[MXManager getUnreadMessagesWithCompletion:completion]`
 
 ### 获取自定义 id 未读消息
 
 开发者使用此接口来统一获取自定义 id 所有的未读消息
-`[MQManager getUnreadMessagesWithCustomizedId:customizedId completion:completion]`
+`[MXManager getUnreadMessagesWithCustomizedId:customizedId completion:completion]`
 
 ###录音和播放录音
 
@@ -641,11 +641,11 @@ MQAgent *agent = [MQManager getCurrentAgent];
 - 和其他音频同时播放
 - 降低其他音频声音
 
-用户可以根据情况选择，在 `MQChatViewManager.h` 中直接配置以下两个属性：
+用户可以根据情况选择，在 `MXChatViewManager.h` 中直接配置以下两个属性：
 
-`@property (nonatomic, assign) MQPlayMode playMode;`
+`@property (nonatomic, assign) MXPlayMode playMode;`
 
-`@property (nonatomic, assign) MQRecordMode recordMode;`
+`@property (nonatomic, assign) MXRecordMode recordMode;`
 
 如果宿主应用本身也有声音播放，比如游戏，为了不影响背景音乐播放，可以设置 `@property (nonatomic, assign) BOOL keepAudioSessionActive;` 为 `YES` 这样就不会再完成播放和录音之后关闭 AudioSession，从而不会影响背景音乐。
 
@@ -654,18 +654,18 @@ MQAgent *agent = [MQManager getCurrentAgent];
 
 ### 预发送消息
 
-在 `MQChatViewManager.h` 中， 通过设置 `@property (nonatomic, strong) NSArray *preSendMessages;` 来让客户显示聊天窗口的时候，自动向客服发送消息，支持文字和图片。
+在 `MXChatViewManager.h` 中， 通过设置 `@property (nonatomic, strong) NSArray *preSendMessages;` 来让客户显示聊天窗口的时候，自动向客服发送消息，支持文字和图片。
 
 ### 监听聊天界面显示和消失
 
-* `MQ_NOTIFICATION_CHAT_BEGIN` 在聊天界面出现的时候发送
-* `MQ_NOTIFICATION_CHAT_END` 在聊天界面消失时发送
+* `MX_NOTIFICATION_CHAT_BEGIN` 在聊天界面出现的时候发送
+* `MX_NOTIFICATION_CHAT_END` 在聊天界面消失时发送
 
 
 ### 用户排队
 
 监听消息:
-当用户被客服接入时，会受到 `MQ_NOTIFICATION_QUEUEING_END` 通知。
+当用户被客服接入时，会受到 `MX_NOTIFICATION_QUEUEING_END` 通知。
 
 
 # 七  SDK 中嵌入Mixdesk SDK
@@ -675,9 +675,9 @@ MQAgent *agent = [MQManager getCurrentAgent];
 
 如果开发者使用了Mixdesk提供的聊天界面，还需要公开素材包：
 
-开发者点击工程右边的工程名,然后在工程名右边依次选择 *TARGETS* -\> *BuiLd Phases* -\> *Copy Files* ，展开 *Copy Files* 后点击展开后下面的 *+* 来添加Mixdesk素材包 `MQChatViewAsset.bundle`。
+开发者点击工程右边的工程名,然后在工程名右边依次选择 *TARGETS* -\> *BuiLd Phases* -\> *Copy Files* ，展开 *Copy Files* 后点击展开后下面的 *+* 来添加Mixdesk素材包 `MXChatViewAsset.bundle`。
 
-在之后发布你的 SDK 时，将 `MQChatViewAsset.bundle` 一起打包即可。
+在之后发布你的 SDK 时，将 `MXChatViewAsset.bundle` 一起打包即可。
 
 
 # 九 名词解释
@@ -755,7 +755,7 @@ Mixdesk SDK 在上线后（或称为分配对话后），均有一个唯一 id�
 ## SDK 初始化失败
 
 ### 1. 没有配置 NSExceptionDomains
-如果没有配置`NSExceptionDomains`，MixdeskSDK会返回`MQErrorCodePlistConfigurationError`，并且在控制台中打印：`!!!Mixdesk SDK Error：请开发者在 App 的 info.plist 中增加 NSExceptionDomains，具体操作方法请见「https://github.com/Mixdesk/MixdeskSDK-iOS#info.plist设置」`。如果出现上诉情况，请 [配置NSExceptionDomains](#infoplist设置)
+如果没有配置`NSExceptionDomains`，MixdeskSDK会返回`MXErrorCodePlistConfigurationError`，并且在控制台中打印：`!!!Mixdesk SDK Error：请开发者在 App 的 info.plist 中增加 NSExceptionDomains，具体操作方法请见「https://github.com/Mixdesk/MixdeskSDK-iOS#info.plist设置」`。如果出现上诉情况，请 [配置NSExceptionDomains](#infoplist设置)
 
 **注意**，如果发现添加配置后，仍然打印配置错误，请开发者检查是否错误地将配置加进了项目 Tests 的 info.plist 中去。
 
@@ -787,8 +787,8 @@ Mixdesk开源的聊天界面用的是系统的 `UINavgationController`，所以�
 
 解决办法：（感谢 [RandyTechnology](https://github.com/RandyTechnology) 向我们提供该问题的原因和解决方案）
 
-* 在MQChatViewController的viewWillAppear里加入 `[[IQKeyboardManager sharedManager] setEnable:NO];`，作用是在当前页面禁止IQKeyboardManager
-* 在MQChatViewController的viewWillDisappear里加入 `[[IQKeyboardManager sharedManager] setEnable:YES];`，作用是在离开当前页面之前重新启用IQKeyboardManager
+* 在MXChatViewController的viewWillAppear里加入 `[[IQKeyboardManager sharedManager] setEnable:NO];`，作用是在当前页面禁止IQKeyboardManager
+* 在MXChatViewController的viewWillDisappear里加入 `[[IQKeyboardManager sharedManager] setEnable:YES];`，作用是在离开当前页面之前重新启用IQKeyboardManager
 
 ## 使用 TabBarController 后，inputBar 高度出现异常
 
