@@ -40,7 +40,4 @@ Pod::Spec.new do |s|
     ss.xcconfig = { "LIBRARY_SEARCH_PATHS" => "\"$(PODS_ROOT)/Mixdesk/Mixdesk-SDK-files\"" }
     ss.resources = 'Mixdesk-SDK-files/MXChatViewController/Assets/MXChatViewAsset.bundle'
   end
-  
-  
-
 end

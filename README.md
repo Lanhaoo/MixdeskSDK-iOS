@@ -14,9 +14,9 @@ edition: m2025
 * [一 导入MixdeskSDK](#一导入MixdeskSDK)
 * [二 开始你的集成之旅](#二开始你的集成之旅)
 * [三 SDK工作流程](#三SDK工作流程)
-* [四 接口介绍](#四接口介绍)
-* [五 Mixdesk API 接口介绍](#五MixdeskAPI接口介绍)
-* [六 SDK中嵌入MixdeskSDK](#六sdk中嵌入MixdeskSDK)
+* [四 SDK工作流程](#四SDK工作流程)
+* [五 Mixdesk API 接口介绍](#五接口介绍)
+* [六 SDK中嵌入MixdeskSDK](#六SDK中嵌入MixdeskSDK)
 * [七 名词解释](#七名词解释)
 * [八 常见问题](#八常见问题)
 * [九 更新日志](#九更新日志)
@@ -30,7 +30,7 @@ edition: m2025
 - 查看SDK中MixdeskManager.h类中 **#define MixdeskSDKVersion **
 - pod search Mixdesk(此方法由于本地pod缓存,导致获取不到最新的)
 
-# 一、导入MixdeskSDK
+# 一 导入MixdeskSDK
 
  **推荐你使用CocoaPods导入我们的SDK,原因如下:**
 
@@ -163,7 +163,7 @@ Mixdesk SDK 的实现，依赖了一些系统框架，在开发应用时，要�
 
 当前仅支持一种推送方案，当APP切换到后台时,mixdesk服务端发送消息至开发者的服务端，开发者再通过极光等第三方推送推送消息到 App，可见 [SDK 工作流程](#SDK工作流程) 。
 
-设置服务器地址，请使用mixdesk管理员帐号登录 [mixdesk](http://www.mixdesk.com)，在「设置」 -\> 「SDK」中设置。
+设置服务器地址，请使用mixdesk管理员帐号登录 [mixdesk](http://app.mixdesk.com)，在「设置」 -\> 「SDK」中设置。
 
 ![设置推送地址](https://github.com/Mixdesk/MixdeskSDK-iOS/blob/master/resources/img/1667446550675.png)
 
@@ -255,61 +255,12 @@ NSDictionary* clientCustomizedAttrs = @{
 |Key|说明|
 |---|---|
 |name|真实姓名|
-|gender|性别|
-|age|年龄|
 |tel|电话|
-|weixin|微信|
-|weibo|微博|
-|address|地址|
 |email|邮件|
-|weibo|微博|
-|avatar|头像 URL|
 |comment|备注|
-
-## SDK群发功能
-
-Mixdesk工作台设置群发任务，通过 SDK 渠道给目标联系人群发一条消息，引导联系人进入对话。
-
-开启群发功能
-
-```objc
-  [[MXNotificationManager sharedManager] openMXGroupNotificationServer];
-```
-
-群发功能的目标联系人需要有对应的联系人信息，所以需要先配置联系人对应的[自定义信息](#添加自定义信息)
-
-**注意**
-* 该选项需要在SDK初始化成功以后调用。
-* 该选项需要配置对应的联系人信息
-
-自定义点击群发消息的响应事件
-
-```objc
-    // 开启自定义响应事件
-  [MXNotificationManager sharedManager].handleNotification = YES;
-```
-在需要处理响应的地方，监听通知 MX_CLICK_GROUP_NOTIFICATION
 
 **注意**
 * 开启自定义响应事件以后，需要自己通过监听通知来处理响应事件，否则点击群发消息以后会没有反应。
-
-## 指定分配客服和客服组
-
-Mixdesk默认会按照管理员设置的分配方式智能分配客服，但如果需要让来自 App 的联系人指定分配给某个客服或者某组客服，需要在上线前添加以下代码：
-
-如果您使用Mixdesk提供的 UI ，可对 UI 进行如下配置，进行指定分配：
-
-```objc
-MXChatViewManager *chatViewManager = [[MXChatViewManager alloc] init];
-[chatViewManager setScheduledAgentId:agentToken];
-```
-
-如果您自定义 UI，可直接使用如下Mixdesk SDK 逻辑接口：
-
-```objc
-//分配到指定客服，或指定组里面的客服，指定客服优先级高，并可选择分配失败后的转接规则
-[MXManager setScheduledAgentWithAgentId:agentId agentGroupId:agentGroupId scheduleRule:rule];
-```
 
 **注意**
 * 该选项需要在用户上线前设置。
@@ -322,16 +273,9 @@ MXChatViewManager *chatViewManager = [[MXChatViewManager alloc] init];
 你只需要在用户需要客服服务的时候，调出Mixdesk UI。如下所示：
 
 ```objc
-//当用户需要使用客服服务时，创建并退出视图
 MXChatViewManager *chatViewManager = [[MXChatViewManager alloc] init];
 [chatViewManager pushMXChatViewControllerInViewController:self];
 ```
-
-**注意**，此时使用Mixdesk 初始化SDK后的联系人进行上线。如果开发者需要指定联系人上线，可参考:
-
-[设置登录客服的开发者自定义 id](#设置登录客服的开发者自定义-id)
-
-[设置登录客服的联系人 id](#设置登录客服的联系人-id)
 
 `MXServiceToViewInterface` 文件是开源聊天界面调用Mixdesk SDK 接口的中间层，目的是剥离开源界面中的Mixdesk业务逻辑。这样就能让该聊天界面用于非Mixdesk项目中，开发者只需要实现 `MXServiceToViewInterface` 中的方法，即可将自己项目的业务逻辑和该聊天界面对接。
 
@@ -381,7 +325,7 @@ MXChatViewManager *chatViewManager = [[MXChatViewManager alloc] init];
 
 开源聊天界面的更多配置，可参见 [MXChatViewManager.h](https://github.com/Mixdesk/MixdeskSDK-iOS/blob/master/Mixdesk-SDK-files/MXChatViewController/Config/MXChatViewManager.h) 文件。
 
-# 六 mixdesk API 接口介绍
+# 六 SDK中嵌入MixdeskSDK
 
 **本节主要介绍部分重要的接口。在`MixdeskSDK.framework`的`MXManager.h`中，所有接口都有详细注释。**
 
@@ -539,7 +483,7 @@ MXAgent *agent = [MXManager getCurrentAgent];
 }];
 ```
 
-**注意**，服务端的历史消息是该联系人在**所有平台上**产生的消息，包括网页端、Android SDK、iOS SDK、微博、微信，可在聊天界面的下拉刷新处调用。
+**注意**，服务端的历史消息是该联系人在**所有平台上**产生的消息，包括网页端、Android SDK、iOS可在聊天界面的下拉刷新处调用。
 
 
 ### 从本地数据库获取历史消息
@@ -586,6 +530,7 @@ MXAgent *agent = [MXManager getCurrentAgent];
 //消息发送成功后的处理
 }];
 ```
+
 开发者调用此接口来发送**视频消息**：
 
 ```objc
@@ -593,30 +538,8 @@ MXAgent *agent = [MXManager getCurrentAgent];
 //消息发送成功后的处理
 }];
 ```
-开发者调用此接口来发送**商品卡片消息**：
-
-```objc
-+ (MXMessage *)sendProductCardMessageWithPictureUrl:(NSString *)pictureUrl
-                                         title:(NSString *)title
-                                         descripation:(NSString *)descripation
-                                         productUrl:(NSString *)productUrl
-                                         salesCount:(long)salesCount
-                               completion:(void (^)(MXMessage *sendedMessage, NSError *error)) {
-//消息发送成功后的处理
-}];
-```
 
 **注意**，调用发送消息接口后，回调中会返回一个消息实体，开发者可根据此消息的状态，来判断该条消息是发送成功还是发送失败。
-
-### 自定义点击商品卡片的响应
-
-```objc
-    // 自定义商品卡片响应事件
-    MXChatViewManager *chatViewManager = [[MXChatViewManager alloc] init];
-    [chatViewManager didTapProductCard:^(NSString *productUrl) {
-        NSLog(@"商品卡片的响应链接：%@",productUrl);
-    }];
-```
 
 ### 获取未读消息数
 
@@ -662,7 +585,7 @@ MXAgent *agent = [MXManager getCurrentAgent];
 当用户被客服接入时，会受到 `MX_NOTIFICATION_QUEUEING_END` 通知。
 
 
-# 七  SDK 中嵌入Mixdesk SDK
+# 六  SDK 中嵌入Mixdesk SDK
 如果你的开发项目也是 SDK，那么在了解常规 App 嵌入Mixdesk SDK 的基础上，还需要注意其他事项。
 
 与 App 嵌入Mixdesk SDK 的步骤相同，需要 导入Mixdesk SDK -\> 引入依赖库 -\> 初始化 SDK -\> 使用Mixdesk SDK。
@@ -674,7 +597,7 @@ MXAgent *agent = [MXManager getCurrentAgent];
 在之后发布你的 SDK 时，将 `MXChatViewAsset.bundle` 一起打包即可。
 
 
-# 九 名词解释
+# 七 名词解释
 
 ### 开发者的推送消息服务器
 
@@ -697,7 +620,7 @@ Mixdesk SDK 在上线后（或称为分配对话后），均有一个唯一 id�
 **注意**，如果开发者自己的 id 过于简单（例如自增长的数字），安全起见，建议开发者保存 `Mixdesk联系人 id`，来进行上线操作。
 
 
-# 十 常见问题
+# 八 常见问题
 - [更新SDK](#更新SDK)
 - [iOS 11下 SDK 的聊天界面底部输入框出现绿色条状,且无法输入](#ios11下sdk的聊天界面底部输入框出现绿色条状,且无法输入)
 - [SDK 初始化失败](#sdk-初始化失败)
@@ -716,7 +639,7 @@ Mixdesk SDK 在上线后（或称为分配对话后），均有一个唯一 id�
 ### 1.pod集成的用户
   
   直接在工程中修改 podfile里面 mixdesk 的版本号为最新的版本号,然后 终端 cd到项目工程目录下,执行 **pod update mixdesk**即可完成SDK的更新.
-  
+
 ### 2.手动集成的客户比较麻烦,我们这边探索的办法为:
 
 1通过**show In finder** 删除自己项目工程中的mixdesk的四个文件
@@ -775,10 +698,6 @@ Mixdesk开源的聊天界面用的是系统的 `UINavgationController`，所以�
 
 使用了 TabBarController 的 App，视图结构都各相不同，并且可能存在自定义 TabBar 的情况，所以Mixdesk SDK 无法判断并准确调整，需要开发者自行修改 App 或 SDK 代码。自 iOS 7 系统后，大多数情况下只需修改 TabBar 的 `hidden` 和 `translucent` 属性便可以正常使用。
 
-## 如何得到客服ID或客服分组ID
-
-请查看 [指定分配客服和客服组](#指定分配客服和客服组) 中的配图。
-
 ## 如何在聊天界面之外监听新消息的通知
 
 请查看 [如何监听监听收到消息的广播](#监听收到消息的广播)。
@@ -815,6 +734,6 @@ VoiceConvert |  N/A | AMR 和 WAV 语音格式的互转；没找到出处，哪�
 [CustomIOSAlertView](https://github.com/wimagguc/ios-custom-alertview) | 自定义 | 自定义的 AlertView，用于显示本项目的评价弹出框；**注意**，我们队该开源项目进行了修改，增加了按钮之间的分隔线条、判断当前是否已经有 AlertView 在显示、以及键盘弹出时界面 frame 计算，该修改版本可以见 [CustomIOSAlertView](https://github.com/ijinmao/ios-custom-alertview)；
 [AGEmojiKeyboard](https://github.com/ayushgoel/AGEmojiKeyboard)|0.2.0|表情键盘，布局进行自定义，源码可以在工程中查看；
 
-# 十一 更新日志
+# 九 更新日志
 **v1.0.0  2025 年 5 月 28 日**
 * SDK 发布
