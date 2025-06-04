@@ -46,7 +46,7 @@
     
 #pragma mark  集成第一步: 初始化,  参数:appkey
     [self initMixdeskSDK];
-//    [self networkPermissionMonitoring];
+    [self networkPermissionMonitoring];
     
     self.window.rootViewController = [[UINavigationController alloc] initWithRootViewController:[[ViewController alloc] init]];
     
