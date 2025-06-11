@@ -735,5 +735,5 @@ VoiceConvert |  N/A | AMR 和 WAV 语音格式的互转；没找到出处，哪�
 [AGEmojiKeyboard](https://github.com/ayushgoel/AGEmojiKeyboard)|0.2.0|表情键盘，布局进行自定义，源码可以在工程中查看；
 
 # 九 更新日志
-**v1.0.0  2025 年 5 月 28 日**
+**v1.0.0  2025 年 6 月 11 日**
 * SDK 发布

@@ -7,6 +7,7 @@
 //
 
 #import "MXAgent.h"
+#include <objc/NSObjCRuntime.h>
 #import "MXCardInfo.h"
 #import "MXDefinition.h"
 #import "MXEnterprise.h"
@@ -773,5 +774,5 @@
 
 + (void)clickQuickBtn:(NSString *)func_id
          quick_btn_id:(NSInteger)quick_btn_id
-                 func:(NSString *)func;
+                 func:(NSInteger)func;
 @end
