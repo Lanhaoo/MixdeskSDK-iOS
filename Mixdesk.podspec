@@ -9,7 +9,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "Mixdesk"
-  s.version          = "1.0.0"
+  s.version          = "1.0.1"
   s.summary          = "Mixdesk官方 SDK for iOS"
   s.description      = "Mixdesk官方的 iOS SDK, 可接入Mixdesk系统"
 
