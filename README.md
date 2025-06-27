@@ -43,7 +43,7 @@ edition: m2025
 在 Podfile 中加入：
 
 ```
-pod 'Mixdesk', '~> 1.0.0'
+pod 'Mixdesk', '~> 1.0.2'
 ```
 接着安装Mixdesk pod 即可：
 
