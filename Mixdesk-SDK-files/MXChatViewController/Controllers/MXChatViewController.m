@@ -1172,11 +1172,11 @@ static CGFloat const kMXChatViewInputBarHeight = 80.0;
     break;
   }
 
-  if ([titleLabel.text
-          isEqualToString:[MXBundleUtil
-                              localizedStringForKey:@"no_agent_title"]]) {
-    statusImageView.image = nil;
-  }
+  // if ([titleLabel.text
+  //         isEqualToString:[MXBundleUtil
+  //                             localizedStringForKey:@"no_agent_title"]]) {
+  statusImageView.image = nil;
+  // }
   CGFloat maxTitleViewWidth =
       [[UIScreen mainScreen] bounds].size.width - 2 * 50;
   CGFloat statusImageWidth = statusImageView.image.size.width;
