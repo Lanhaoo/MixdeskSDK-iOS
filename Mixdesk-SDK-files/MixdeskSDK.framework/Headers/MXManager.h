@@ -17,7 +17,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-#define MXSDKVersion @"1.0.0"
+#define MXSDKVersion @"1.0.2"
 @protocol MXManagerDelegate <NSObject>
 
 /**
