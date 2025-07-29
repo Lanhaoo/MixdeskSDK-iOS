@@ -182,3 +182,5 @@
 
 "mx_evaluation_please_select_level" = "กรุณาเลือกระดับ";
 "mx_evaluation_please_select_tag" = "กรุณาเลือกแท็ก";
+
+"mx_ip_restricted_message" = "ขออภัย ขณะนี้ระบบไม่รองรับการส่งข้อความผ่านเครือข่ายในจีนแผ่นดินใหญ่ ขอขอบคุณสำหรับความเข้าใจของคุณ";

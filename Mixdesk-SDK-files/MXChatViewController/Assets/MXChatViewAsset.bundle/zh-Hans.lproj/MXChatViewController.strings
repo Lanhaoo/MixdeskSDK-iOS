@@ -178,3 +178,5 @@
 
 "mx_evaluation_please_select_level" = "请选择评价等级";
 "mx_evaluation_please_select_tag" = "请选择评价标签";
+
+"mx_ip_restricted_message" = "抱歉,当前系统暂不支持通过中国大陆地区的网络发送消息,感谢您的理解";

@@ -8,6 +8,7 @@
 
 #import "MXQuickBtnView.h"
 #import "MXBundleUtil.h"
+#import "MXServiceToViewInterface.h"
 #import "UIColor+MXHex.h"
 #import "UIView+MXLayout.h"
 #import <SafariServices/SafariServices.h>
@@ -264,9 +265,9 @@
   MXMessageBottomQuickBtnModel *model = button.btnModel;
 
   // 处理点击回调
-  if (self.mxQuickBtnClickedWithModel) {
-    self.mxQuickBtnClickedWithModel(model);
-  }
+  // if (self.mxQuickBtnClickedWithModel) {
+  //   self.mxQuickBtnClickedWithModel(model);
+  // }
 
   switch (model.btn_type) {
   case 1: // 复制内容
@@ -310,11 +311,20 @@
     [self showImagePopover:model.content fromButton:button];
     break;
   case 6: // 自助问答
-
     // 调用发送消息方法
     [self sendMessageWithModel:model];
     break;
   }
+
+  // 延迟500ms
+  dispatch_after(
+      dispatch_time(DISPATCH_TIME_NOW, (int64_t)(500 * NSEC_PER_MSEC)),
+      dispatch_get_main_queue(), ^{
+        // 直接调用MXServiceToViewInterface的方法
+        [MXServiceToViewInterface clickQuickBtn:model.func_id
+                                   quick_btn_id:model.id
+                                           func:model.func];
+      });
 }
 
 - (void)copyText:(NSString *)text {
@@ -331,10 +341,7 @@
   UIViewController *topVC = [self topViewController];
 
   // 确保消息内容不为空
-  NSString *messageContent = model.content;
-  if (!messageContent || messageContent.length == 0) {
-    messageContent = model.btn_text;
-  }
+  NSString *messageContent = model.btn_text;
 
   NSLog(@"发送消息内容: %@", messageContent);
 

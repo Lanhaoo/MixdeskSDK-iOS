@@ -13,10 +13,11 @@
 #import "MXMessageFactoryHelper.h"
 #import "MXVisialMessageFactory.h"
 #import "NSArray+MXFunctional.h"
+#import "MXToast.h"
 #import <MixdeskSDK/MixdeskSDK.h>
 
 #pragma 该文件的作用是 : 开源聊天界面调用Mixdesk SDK 接口的中间层,             \
-    目的是剥离开源界面中的Mixdesk业务逻辑                       \
+    目的是剥离开源界面中的Mixdesk业务逻辑                                      \
         .这样就能让该聊天界面用于非Mixdesk项目中,                              \
     开发者只需要实现 'MXServiceToViewInterface'中的方法,                       \
     即可将自己项目的业务逻辑和该聊天界面对接.
@@ -305,13 +306,44 @@
                            error:(NSError *)error
                         delegate:
                             (id<MXServiceToViewInterfaceDelegate>)delegate {
-  NSLog(@"MixdeskSDK: 发送text消息失败\nerror = %@", error);
+  NSLog(@"MixdeskSDK: 发送text消息失败\nerror = %@", error.userInfo[@"serverError"]);
   if (delegate) {
     if ([delegate respondsToSelector:@selector
                   (didSendMessageWithNewMessageId:
                                      oldMessageId:newMessageDate:replacedContent
                                                  :updateMediaPath:sendStatus
                                                  :error:)]) {
+
+      // 这里需要针对于发送消息的错误做出提示
+      if(error.code == -1011 
+        && error.userInfo[@"serverError"] 
+        && error.userInfo[@"serverError"] != [NSNull null]
+        && [error.userInfo[@"serverError"] isKindOfClass:[NSDictionary class]]
+        && [error.userInfo[@"serverError"] objectForKey:@"error"] != nil
+        && [[error.userInfo[@"serverError"] objectForKey:@"error"] isKindOfClass:[NSDictionary class]]
+        && [[error.userInfo[@"serverError"] objectForKey:@"error"] objectForKey:@"code"] != nil
+        && [[error.userInfo[@"serverError"] objectForKey:@"error"] objectForKey:@"code"] != [NSNull null]
+        && [[[error.userInfo[@"serverError"] objectForKey:@"error"] objectForKey:@"code"] intValue] == 206500105
+        && [[error.userInfo[@"serverError"] objectForKey:@"error"] objectForKey:@"message"] != nil
+        && [[error.userInfo[@"serverError"] objectForKey:@"error"] objectForKey:@"message"] != [NSNull null]
+      ) {
+        UIWindow *window = nil;
+        if (@available(iOS 13.0, *)) {
+            for (UIWindowScene* windowScene in [UIApplication sharedApplication].connectedScenes) {
+                if (windowScene.activationState == UISceneActivationStateForegroundActive) {
+                    window = windowScene.windows.firstObject;
+                    break;
+                }
+            }
+        } else {
+            window = [UIApplication sharedApplication].keyWindow;
+        }
+          NSString *message = [[error.userInfo[@"serverError"] objectForKey:@"error"] objectForKey:@"message"];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [MXToast showToast:message duration:1.0 window:window];
+        });
+      }
+
       [delegate didSendMessageWithNewMessageId:localMessageId
                                   oldMessageId:localMessageId
                                 newMessageDate:nil
@@ -431,7 +463,7 @@
 + (void)clickQuickBtn:(NSString *)func_id
          quick_btn_id:(NSInteger)quick_btn_id
                  func:(NSInteger)func {
-    [MXManager clickQuickBtn:func_id quick_btn_id:@(quick_btn_id) func:@(func)];
+   [MXManager clickQuickBtn:func_id quick_btn_id:quick_btn_id func:func];
 }
 
 + (NSString *)getEnterpriseConfigAvatar {
@@ -582,6 +614,10 @@
 
 + (BOOL)isBlacklisted {
   return [MXManager isBlacklisted];
+}
+
++ (BOOL)isAreaRestricted {
+  return [MXManager isAreaRestricted];
 }
 
 + (void)clearReceivedFiles {

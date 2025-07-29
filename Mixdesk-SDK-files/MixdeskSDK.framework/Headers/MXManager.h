@@ -17,7 +17,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-#define MXSDKVersion @"1.0.2"
+#define MXSDKVersion @"1.0.4"
 @protocol MXManagerDelegate <NSObject>
 
 /**
@@ -775,4 +775,10 @@
 + (void)clickQuickBtn:(NSString *)func_id
          quick_btn_id:(NSInteger)quick_btn_id
                  func:(NSInteger)func;
+
+/**
+ 当前企业是否地区限制
+ */
++ (BOOL)isAreaRestricted;
+
 @end

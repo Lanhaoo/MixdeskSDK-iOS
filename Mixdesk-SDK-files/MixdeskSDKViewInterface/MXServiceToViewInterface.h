@@ -613,4 +613,9 @@
  */
 + (void)transferConversationFromAiAgentToHumanWithConvId;
 
+/**
+ 获取当前企业是否地区限制
+ */
++ (BOOL)isAreaRestricted;
+
 @end

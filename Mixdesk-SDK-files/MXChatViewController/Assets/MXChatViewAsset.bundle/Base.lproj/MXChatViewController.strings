@@ -177,3 +177,5 @@
 
 "waiting_agent_send_message" = "正在排队，请等待客服接入后发送消息";
 "pre_chat_form_input" = "输入";
+
+"mx_ip_restricted_message" = "抱歉,当前系统暂不支持通过中国大陆地区的网络发送消息,感谢您的理解";

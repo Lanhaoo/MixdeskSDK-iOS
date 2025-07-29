@@ -181,3 +181,5 @@
 
 "mx_evaluation_please_select_level" = "Vui lòng chọn cấp độ";
 "mx_evaluation_please_select_tag" = "Vui lòng chọn tag";
+
+"mx_ip_restricted_message" = "Xin lỗi, hệ thống hiện tại không hỗ trợ gửi tin nhắn qua mạng tại Trung Quốc đại lục. Cảm ơn bạn đã thông cảm.";

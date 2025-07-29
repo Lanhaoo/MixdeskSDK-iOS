@@ -185,3 +185,4 @@
 "mx_evaluation_please_select_level" = "Выберите уровень";
 "mx_evaluation_please_select_tag" = "Выберите тег";
 
+"mx_ip_restricted_message" = "Извините, текущая система не поддерживает отправку сообщений через сети в материковом Китае. Спасибо за понимание.";

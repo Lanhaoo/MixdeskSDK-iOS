@@ -81,6 +81,7 @@ typedef enum : NSInteger {
   MXErrorCodeSchedulerFail = -2008,   // 分配对话失败
   MXErrorCodeUninitailized = -2009,   // 未初始化操作
   MXErrorCodeInitializFailed = -2010, // 初始化失败
+  MXErrorCodeAreaLimit = 20012, // 区域限制[禁止发消息]
 } MXErrorCode;
 
 /**

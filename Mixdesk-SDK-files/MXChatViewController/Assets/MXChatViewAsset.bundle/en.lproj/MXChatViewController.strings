@@ -182,3 +182,4 @@
 "mx_evaluation_please_select_level" = "Please select the evaluation";
 "mx_evaluation_please_select_tag" = "Please select the tag";
 
+"mx_ip_restricted_message" = "Sorry, the current system does not support sending messages through networks in mainland China. Thank you for your understanding.";

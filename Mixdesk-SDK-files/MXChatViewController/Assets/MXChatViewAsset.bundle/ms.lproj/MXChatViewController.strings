@@ -187,3 +187,5 @@
 
 "mx_evaluation_please_select_level" = "Sila pilih penilaian";
 "mx_evaluation_please_select_tag" = "Sila pilih tag";
+
+"mx_ip_restricted_message" = "Maaf, sistem semasa tidak menyokong penghantaran mesej melalui rangkaian di Tanah Besar China. Terima kasih atas pemahaman anda.";

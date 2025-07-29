@@ -1588,6 +1588,10 @@ static NSInteger const kMXChatGetHistoryMessageNumber = 20;
         break;
       }
 
+      if(agent.privilege == MXAgentPrivilegeAiAgent){
+        agentStatus = MXChatAgentStatusOnDuty;
+      }
+
       [self.delegate didScheduleClientWithViewTitle:viewTitle
                                         agentStatus:agentStatus];
     }
@@ -1878,9 +1882,6 @@ static NSInteger const kMXChatGetHistoryMessageNumber = 20;
   } else {
     [self handleVisualMessages:messages];
   }
-  // 判断是否有需要移除的营销机器人引导按钮
-  [self checkNeedRemoveBotGuideMessageWithForceReload:NO];
-
   // 通知界面收到了消息
   BOOL isRefreshView = true;
   if (![MXChatViewConfig sharedConfig].enableEventDispaly &&

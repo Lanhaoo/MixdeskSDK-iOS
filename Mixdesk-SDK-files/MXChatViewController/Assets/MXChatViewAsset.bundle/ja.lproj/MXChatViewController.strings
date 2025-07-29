@@ -182,3 +182,4 @@
 "mx_evaluation_please_select_level" = "評価を選択してください";
 "mx_evaluation_please_select_tag" = "タグを選択してください";
 
+"mx_ip_restricted_message" = "申し訳ありませんが、現在のシステムは中国本土のネットワークを通じてのメッセージ送信をサポートしていません。ご理解いただきありがとうございます。";

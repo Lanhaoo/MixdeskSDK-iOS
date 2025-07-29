@@ -75,6 +75,8 @@ static CGFloat const kMXChatViewInputBarHeight = 80.0;
 
 @property(nonatomic, assign) MXEvaluationConfig *levels; // 评价的配置列表
 
+@property(nonatomic, strong) UILabel *ipRestrictedMessageLabel; // 添加IP限制提示信息的Label
+
 @end
 @implementation MXChatViewController {
   MXChatViewConfig *chatViewConfig;
@@ -191,6 +193,8 @@ static CGFloat const kMXChatViewInputBarHeight = 80.0;
             getEnterpriseConfigInfoWithCache:NO
                                     complete:^(MXEnterprise *enterprise,
                                                NSError *e) {
+                                                // 只有当前地区允许才能显示
+                                                if (enterprise.configInfo.ip_allowed) {
                                       weakSelf.sendVideoMsgStatus =
                                           enterprise.configInfo.videoMsgStatus;
                                       // 配置 和 本地设置 都开的时候才能发送图片
@@ -201,6 +205,11 @@ static CGFloat const kMXChatViewInputBarHeight = 80.0;
                                               .enableSendImageMessage;
                                       // 添加操作按钮
                                       [weakSelf.contentView setupButtons];
+                                    } else {
+                                      // 不允许中国大陆地区的网络发送消息
+                                      [weakSelf showIpRestrictedMessageInsteadOfInputBar];
+                                    }
+                                      
                                       weakSelf.isFirstScheduleClient = YES;
                                       [weakSelf
                                               .chatViewService setClientOnline];
@@ -658,6 +667,9 @@ static CGFloat const kMXChatViewInputBarHeight = 80.0;
                 forControlEvents:UIControlEventTouchUpInside];
             strongSelf.navigationItem.rightBarButtonItem =
                 [[UIBarButtonItem alloc] initWithCustomView:btn];
+          } else {
+            // 直接隐藏
+            strongSelf.navigationItem.rightBarButtonItem = nil;
           }
         }];
     return;
@@ -1157,43 +1169,43 @@ static CGFloat const kMXChatViewInputBarHeight = 80.0;
   CGFloat titleWidth = [MXStringSizeUtil getWidthForText:agentName
                                                 withFont:titleLabel.font
                                                andHeight:titleHeight];
-  UIImageView *statusImageView = [UIImageView new];
-  switch (agentStatus) {
-  case MXChatAgentStatusOnDuty:
-    statusImageView.image = [MXAssetUtil agentOnDutyImage];
-    break;
-  case MXChatAgentStatusOffDuty:
-    statusImageView.image = [MXAssetUtil agentOffDutyImage];
-    break;
-  case MXChatAgentStatusOffLine:
-    statusImageView.image = [MXAssetUtil agentOfflineImage];
-    break;
-  default:
-    break;
-  }
+  // UIImageView *statusImageView = [UIImageView new];
+  // switch (agentStatus) {
+  // case MXChatAgentStatusOnDuty:
+  //   statusImageView.image = [MXAssetUtil agentOnDutyImage];
+  //   break;
+  // case MXChatAgentStatusOffDuty:
+  //   statusImageView.image = [MXAssetUtil agentOffDutyImage];
+  //   break;
+  // case MXChatAgentStatusOffLine:
+  //   statusImageView.image = [MXAssetUtil agentOfflineImage];
+  //   break;
+  // default:
+  //   break;
+  // }
 
   // if ([titleLabel.text
   //         isEqualToString:[MXBundleUtil
   //                             localizedStringForKey:@"no_agent_title"]]) {
-  statusImageView.image = nil;
+  //   statusImageView.image = nil;
   // }
   CGFloat maxTitleViewWidth =
       [[UIScreen mainScreen] bounds].size.width - 2 * 50;
-  CGFloat statusImageWidth = statusImageView.image.size.width;
-  CGFloat titleLabelOriginX = statusImageWidth + 8;
+//  CGFloat statusImageWidth = statusImageView.image.size.width;
+//  CGFloat titleLabelOriginX = statusImageWidth + 8;
   CGFloat titleLabelWidth =
-      titleLabelOriginX + titleWidth > maxTitleViewWidth
-          ? maxTitleViewWidth - (statusImageView.image.size.width + 8)
+      titleWidth > maxTitleViewWidth
+          ? maxTitleViewWidth
           : titleWidth;
 
-  statusImageView.frame =
-      CGRectMake(0, titleHeight / 2 - statusImageView.image.size.height / 2,
-                 statusImageWidth, statusImageView.image.size.height);
+  // statusImageView.frame =
+  //     CGRectMake(0, titleHeight / 2 - statusImageView.image.size.height / 2,
+  //                statusImageWidth, statusImageView.image.size.height);
   titleLabel.frame =
-      CGRectMake(titleLabelOriginX, 0, titleLabelWidth, titleHeight);
+      CGRectMake(0, 0, titleLabelWidth, titleHeight);
   titleView.frame =
-      CGRectMake(0, 0, titleLabelOriginX + titleLabelWidth, titleHeight);
-  [titleView addSubview:statusImageView];
+      CGRectMake(0, 0, titleLabelWidth, titleHeight);
+//  [titleView addSubview:statusImageView];
   [titleView addSubview:titleLabel];
   self.navigationItem.titleView = titleView;
 }
@@ -1875,6 +1887,87 @@ static CGFloat const kMXChatViewInputBarHeight = 80.0;
   if (networkStatusLable) {
     networkStatusLable.hidden = YES;
   }
+}
+
+// 添加显示IP限制信息的方法
+- (void)showIpRestrictedMessage {
+    if (!self.ipRestrictedMessageLabel) {
+        self.ipRestrictedMessageLabel = [[UILabel alloc] init];
+        self.ipRestrictedMessageLabel.text = @"抱歉,当前系统暂不支持通过中国大陆地区的网络发送消息,感谢您的理解";
+        self.ipRestrictedMessageLabel.textAlignment = NSTextAlignmentCenter;
+        self.ipRestrictedMessageLabel.textColor = [UIColor mx_colorWithHexString:@"#333"];
+        self.ipRestrictedMessageLabel.font = [UIFont systemFontOfSize:15];
+        self.ipRestrictedMessageLabel.numberOfLines = 0;
+        self.ipRestrictedMessageLabel.translatesAutoresizingMaskIntoConstraints = NO;
+        
+        [self.view addSubview:self.ipRestrictedMessageLabel];
+        
+        // 设置约束
+        [NSLayoutConstraint activateConstraints:@[
+            [self.ipRestrictedMessageLabel.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor],
+            [self.ipRestrictedMessageLabel.centerYAnchor constraintEqualToAnchor:self.view.centerYAnchor],
+            [self.ipRestrictedMessageLabel.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor constant:20],
+            [self.ipRestrictedMessageLabel.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor constant:-20]
+        ]];
+    }
+    
+    self.ipRestrictedMessageLabel.hidden = NO;
+}
+
+// 添加显示IP限制信息替代输入栏的方法
+- (void)showIpRestrictedMessageInsteadOfInputBar {
+    // 隐藏原来的输入栏
+    self.bottomBar.hidden = YES;
+    
+    // 创建IP限制提示Label
+    if (!self.ipRestrictedMessageLabel) {
+        self.ipRestrictedMessageLabel = [[UILabel alloc] init];
+        self.ipRestrictedMessageLabel.text =[MXBundleUtil localizedStringForKey:@"mx_ip_restricted_message"];
+        self.ipRestrictedMessageLabel.textAlignment = NSTextAlignmentCenter;
+        self.ipRestrictedMessageLabel.textColor = [UIColor mx_colorWithHexString:@"#333"];
+        self.ipRestrictedMessageLabel.font = [UIFont systemFontOfSize:14];
+        self.ipRestrictedMessageLabel.numberOfLines = 0;
+        self.ipRestrictedMessageLabel.translatesAutoresizingMaskIntoConstraints = NO;
+        
+        [self.view addSubview:self.ipRestrictedMessageLabel];
+        
+        // 添加上边框视图
+        UIView *topBorder = [UIView new];
+        topBorder.backgroundColor = [UIColor lightGrayColor];
+        topBorder.translatesAutoresizingMaskIntoConstraints = NO;
+        [self.ipRestrictedMessageLabel addSubview:topBorder];
+        
+        // 设置上边框约束
+        [NSLayoutConstraint activateConstraints:@[
+            [topBorder.topAnchor constraintEqualToAnchor:self.ipRestrictedMessageLabel.topAnchor],
+            [topBorder.leadingAnchor constraintEqualToAnchor:self.ipRestrictedMessageLabel.leadingAnchor],
+            [topBorder.trailingAnchor constraintEqualToAnchor:self.ipRestrictedMessageLabel.trailingAnchor],
+            [topBorder.heightAnchor constraintEqualToConstant:0.5]
+        ]];
+        
+        // 将提示信息放在底部输入栏的位置
+        [NSLayoutConstraint activateConstraints:@[
+            [self.ipRestrictedMessageLabel.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
+            [self.ipRestrictedMessageLabel.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
+            [self.ipRestrictedMessageLabel.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor constant:(MXToolUtil.kMXObtainDeviceVersionIsIphoneX > 0 ? -34 : 0)],
+            [self.ipRestrictedMessageLabel.heightAnchor constraintEqualToConstant:kMXChatViewInputBarHeight]
+        ]];
+        
+        // 修改聊天表格视图的底部约束，让它延伸到提示文本上方
+        for (NSLayoutConstraint *constraint in self.view.constraints) {
+            if (constraint.firstItem == self.chatTableView && constraint.firstAttribute == NSLayoutAttributeBottom) {
+                [constraint setActive:NO];
+                [NSLayoutConstraint constraintWithItem:self.chatTableView
+                                           attribute:NSLayoutAttributeBottom
+                                           relatedBy:NSLayoutRelationEqual
+                                              toItem:self.ipRestrictedMessageLabel
+                                           attribute:NSLayoutAttributeTop
+                                          multiplier:1
+                                            constant:0].active = YES;
+                break;
+            }
+        }
+    }
 }
 
 @end

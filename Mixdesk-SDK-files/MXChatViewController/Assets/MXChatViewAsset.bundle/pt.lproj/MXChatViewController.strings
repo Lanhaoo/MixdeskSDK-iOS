@@ -244,3 +244,5 @@
 
 "mx_evaluation_please_select_level" = "Selecione o nível";
 "mx_evaluation_please_select_tag" = "Selecione a tag";
+
+"mx_ip_restricted_message" = "Desculpe, o sistema atual não suporta o envio de mensagens através de redes na China continental. Obrigado pela sua compreensão.";

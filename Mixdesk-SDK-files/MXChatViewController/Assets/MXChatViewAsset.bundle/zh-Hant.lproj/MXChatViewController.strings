@@ -179,3 +179,5 @@
 "mx_evaluation_please_select_level" = "請選擇評價等級";
 "mx_evaluation_please_select_tag" = "請選擇評價標籤";
 
+"mx_ip_restricted_message" = "抱歉，當前系統暫不支持通過中國大陸地區的網絡發送訊息，感謝您的理解";
+

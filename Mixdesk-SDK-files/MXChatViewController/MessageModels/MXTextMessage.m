@@ -13,7 +13,7 @@
 
 - (instancetype)initWithContent:(NSString *)content {
     if (self = [super init]) {
-        self.content = [content mx_textContent];
+        self.content = content; //[content mx_textContent];
     }
     return self;
 }

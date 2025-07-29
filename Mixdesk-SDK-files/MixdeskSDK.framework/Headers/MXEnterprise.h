@@ -41,6 +41,8 @@
 
 @property(nonatomic, assign) BOOL withdraw_msg_show; // 是否显示撤回消息的提示语
 
+@property(nonatomic, assign) BOOL ip_allowed; // 是否地区限制
+
 @end
 
 @interface MXEnterprise : NSObject
@@ -77,6 +79,7 @@
 
 /** 邮寄地址 */
 @property(nonatomic, copy) NSString *mailingAddress;
+
 /**企业工作台 配置信息*/
 @property(nonatomic, strong) MXEnterpriseConfig *configInfo;
 
