@@ -193,8 +193,6 @@ static CGFloat const kMXChatViewInputBarHeight = 80.0;
             getEnterpriseConfigInfoWithCache:NO
                                     complete:^(MXEnterprise *enterprise,
                                                NSError *e) {
-                                                // 只有当前地区允许才能显示
-                                                if (enterprise.configInfo.ip_allowed) {
                                       weakSelf.sendVideoMsgStatus =
                                           enterprise.configInfo.videoMsgStatus;
                                       // 配置 和 本地设置 都开的时候才能发送图片
@@ -205,11 +203,14 @@ static CGFloat const kMXChatViewInputBarHeight = 80.0;
                                               .enableSendImageMessage;
                                       // 添加操作按钮
                                       [weakSelf.contentView setupButtons];
-                                    } else {
-                                      // 不允许中国大陆地区的网络发送消息
-                                      [weakSelf showIpRestrictedMessageInsteadOfInputBar];
-                                    }
-                                      
+
+                                      if(enterprise != nil) {
+                                        if (enterprise.configInfo.ip_allowed) {
+                                        } else {
+                                        // 不允许中国大陆地区的网络发送消息
+                                          [weakSelf showIpRestrictedMessageInsteadOfInputBar];
+                                        }
+                                      } 
                                       weakSelf.isFirstScheduleClient = YES;
                                       [weakSelf
                                               .chatViewService setClientOnline];
