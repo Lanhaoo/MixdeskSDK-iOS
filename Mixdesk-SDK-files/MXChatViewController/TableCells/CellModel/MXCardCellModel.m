@@ -242,6 +242,10 @@
     return self.conversionId;
 }
 
+- (NSString *)getMessageReadStatus {
+  return @"";
+}
+
 - (NSDate *)getCellDate {
     return self.date;
 }

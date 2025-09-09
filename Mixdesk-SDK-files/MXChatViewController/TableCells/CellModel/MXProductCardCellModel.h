@@ -125,6 +125,16 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) MXChatMessageSendStatus sendStatus;
 
 /**
+ * @brief 消息的已读状态 (2: 已送达, 3: 已读)
+ */
+@property (nonatomic, assign) NSNumber *readStatus;
+
+/**
+ * @brief 已读状态指示器的frame
+ */
+@property (nonatomic, readonly, assign) CGRect readStatusIndicatorFrame;
+
+/**
  *  根据MXMessage内容来生成cell model
  */
 - (MXProductCardCellModel *)initCellModelWithMessage:(MXProductCardMessage *)message

@@ -37,6 +37,11 @@
  */
 - (void)reloadChatTableView;
 
+/**
+ *  通知viewController精确更新特定的表格行
+ */
+- (void)reloadCellsAtIndexPaths:(NSArray<NSIndexPath *> *)indexPaths;
+
 /*
  call after add model
  */
@@ -259,6 +264,11 @@
 初始化历史消息
 */
 - (void)onceLoadHistoryAndRefreshWithSendMsg:(NSString *)message;
+
+/**
+初始化全部历史消息
+*/
+- (void)onceLoadHistoryMessages;
 
 /**
  联系人没上线前缓存需要发送的Text

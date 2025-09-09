@@ -105,6 +105,11 @@ static CGFloat const kMXCellBubbleToImageSpacing = 12.0;
 
 @property (nonatomic, strong) MXVideoMessage *message;
 
+/**
+ * @brief 已读状态指示器的frame
+ */
+@property (nonatomic, readwrite, assign) CGRect readStatusIndicatorFrame;
+
 @end
 
 @implementation MXVideoCellModel
@@ -121,6 +126,7 @@ static CGFloat const kMXCellBubbleToImageSpacing = 12.0;
         self.videoPath = message.videoPath;
         self.videoServerPath = message.videoUrl;
         self.sendStatus = message.sendStatus;
+        self.readStatus = message.readStatus;
         self.isDownloading = false;
         self.cellFromType = message.fromType == MXChatMessageIncoming ? MXChatCellIncoming : MXChatCellOutgoing;
         if (message.userAvatarImage) {
@@ -324,6 +330,19 @@ static CGFloat const kMXCellBubbleToImageSpacing = 12.0;
     CGSize failureSize = CGSizeMake(ceil(failureImage.size.width * 2 / 3), ceil(failureImage.size.height * 2 / 3));
     self.sendFailureFrame = CGRectMake(self.bubbleFrame.origin.x-kMXCellBubbleToIndicatorSpacing-failureSize.width, self.bubbleFrame.origin.y+self.bubbleFrame.size.height/2-failureSize.height/2, failureSize.width, failureSize.height);
 
+    //已读状态指示器的frame (仅对发送的消息显示)
+    CGFloat statusIndicatorSize = 12.0; // 状态指示器大小
+    if (self.cellFromType == MXChatCellOutgoing) {
+        // 状态指示器放在气泡左边5像素，垂直居中对齐气泡底部
+        self.readStatusIndicatorFrame = CGRectMake(CGRectGetMinX(self.bubbleFrame) - statusIndicatorSize - 5,
+                                                  CGRectGetMaxY(self.bubbleFrame) - statusIndicatorSize,
+                                                  statusIndicatorSize,
+                                                  statusIndicatorSize);
+    } else {
+        // 接收的消息不显示状态指示器
+        self.readStatusIndicatorFrame = CGRectZero;
+    }
+
     //计算cell的高度
     self.cellHeight = self.bubbleFrame.origin.y + self.bubbleFrame.size.height + kMXCellAvatarToVerticalEdgeSpacing;
 
@@ -358,12 +377,20 @@ static CGFloat const kMXCellBubbleToImageSpacing = 12.0;
     return self.message.conversionId;
 }
 
+- (NSString *)getMessageReadStatus {
+    return self.readStatus;
+}
+
 - (void)updateCellSendStatus:(MXChatMessageSendStatus)sendStatus {
     self.sendStatus = sendStatus;
 }
 
 - (void)updateCellMessageId:(NSString *)messageId {
     self.message.messageId = messageId;
+}
+
+- (void)updateCellReadStatus:(NSNumber *)readStatus {
+    self.readStatus = readStatus;
 }
 
 - (void)updateCellConversionId:(NSString *)conversionId {

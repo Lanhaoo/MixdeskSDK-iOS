@@ -119,6 +119,11 @@
  */
 @property (nonatomic, readwrite, strong) NSString *conversionId;
 
+/**
+ * @brief 已读状态指示器的frame
+ */
+@property (nonatomic, readwrite, assign) CGRect readStatusIndicatorFrame;
+
 @end
 
 @implementation MXImageCellModel
@@ -136,6 +141,7 @@
         self.messageId = message.messageId;
         self.conversionId = message.conversionId;
         self.sendStatus = message.sendStatus;
+        self.readStatus = message.readStatus;
         self.date = message.date;
         self.avatarPath = @"";
         self.cellHeight = 44.0;
@@ -327,6 +333,19 @@
     CGSize failureSize = CGSizeMake(ceil(failureImage.size.width * 2 / 3), ceil(failureImage.size.height * 2 / 3));
     self.sendFailureFrame = CGRectMake(self.bubbleImageFrame.origin.x-kMXCellBubbleToIndicatorSpacing-failureSize.width, self.bubbleImageFrame.origin.y+self.bubbleImageFrame.size.height/2-failureSize.height/2, failureSize.width, failureSize.height);
     
+    //已读状态指示器的frame (仅对发送的消息显示)
+    CGFloat statusIndicatorSize = 12.0; // 状态指示器大小
+    if (self.cellFromType == MXChatCellOutgoing) {
+        // 状态指示器放在气泡左边5像素，垂直居中对齐气泡底部
+        self.readStatusIndicatorFrame = CGRectMake(CGRectGetMinX(self.bubbleImageFrame) - statusIndicatorSize - 5,
+                                                  CGRectGetMaxY(self.bubbleImageFrame) - statusIndicatorSize,
+                                                  statusIndicatorSize,
+                                                  statusIndicatorSize);
+    } else {
+        // 接收的消息不显示状态指示器
+        self.readStatusIndicatorFrame = CGRectZero;
+    }
+    
     //初始化快捷按钮视图
     CGFloat quickBtnHeight = 0;
     if (self.quickBtns && self.quickBtns.count > 0) {
@@ -370,12 +389,20 @@
     return self.messageId;
 }
 
+- (NSString *)getMessageReadStatus {
+    return self.readStatus;
+}
+
 - (NSString *)getMessageConversionId {
     return self.conversionId;
 }
 
 - (void)updateCellSendStatus:(MXChatMessageSendStatus)sendStatus {
     self.sendStatus = sendStatus;
+}
+
+- (void)updateCellReadStatus:(NSNumber *)readStatus {
+    self.readStatus = readStatus;
 }
 
 - (void)updateCellMessageId:(NSString *)messageId {
@@ -392,6 +419,7 @@
 
 - (void)updateCellFrameWithCellWidth:(CGFloat)cellWidth {
     self.cellWidth = cellWidth;
+
 //    if (self.cellFromType == MXChatCellOutgoing) {
 //        //头像的frame
 //        if ([MXChatViewConfig sharedConfig].enableOutgoingAvatar) {

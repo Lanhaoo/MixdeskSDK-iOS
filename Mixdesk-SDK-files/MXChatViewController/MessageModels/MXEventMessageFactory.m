@@ -15,6 +15,8 @@
 - (MXBaseMessage *)createMessage:(MXMessage *)plainMessage {
     NSString *eventContent = @"";
     MXChatEventType eventType = MXChatEventTypeInitConversation;
+
+    NSDictionary *extraInfo = nil;
     switch (plainMessage.action) {
         case MXMessageActionInitConversation:
         {
@@ -112,6 +114,26 @@
             eventType = MXChatEventTypeAutomationEndConversation;
             break;
         }
+        case MXMessageActionAgentToClientMsgDelivered:
+        {
+            eventContent = @"已送达";
+            eventType = MXChatEventTypeAgentToClientMsgDelivered;
+
+            if (plainMessage.accessoryData) {
+                extraInfo = plainMessage.accessoryData;
+            }
+            break;
+        }
+        case MXMessageActionAgentToClientMsgRead:
+        {
+            eventContent = @"已读";
+            eventType = MXChatEventTypeAgentToClientMsgRead;
+
+            if (plainMessage.accessoryData) {
+                extraInfo = plainMessage.accessoryData;
+            }
+            break;
+        }
         default:
             break;
     }
@@ -125,7 +147,11 @@
     toMessage.userName = plainMessage.agent.nickname;
     toMessage.cardData = plainMessage.cardData;
     toMessage.conversionId = plainMessage.conversationId;
-    
+
+    if (extraInfo) {
+        toMessage.extraInfo = extraInfo;
+    }
+
     if (plainMessage.action == MXMessageActionListedInBlackList) {
         toMessage.eventType = MXChatEventTypeBackList;
     }

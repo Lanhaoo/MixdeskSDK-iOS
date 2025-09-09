@@ -19,6 +19,7 @@
         self.userName = @"";
         self.userAvatarPath = @"";
         self.sendStatus = MXChatMessageSendStatusSending;
+        self.readStatus = @(0);
     }
     return self;
 }

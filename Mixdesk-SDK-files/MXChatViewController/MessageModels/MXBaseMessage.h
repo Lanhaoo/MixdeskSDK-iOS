@@ -57,6 +57,8 @@ typedef NS_ENUM(NSUInteger, MXChatMessageSendStatus) {
 /** 消息发送的状态 */
 @property (nonatomic, assign) MXChatMessageSendStatus sendStatus;
 
+/** 消息状态 3 已读; 2 已送达 */
+@property (nonatomic, assign) NSNumber *readStatus;
 
 
 @end

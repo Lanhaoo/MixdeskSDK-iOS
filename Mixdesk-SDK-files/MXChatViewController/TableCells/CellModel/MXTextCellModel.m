@@ -152,6 +152,10 @@ static CGFloat const kMXTextCellSensitiveHeight = 25.0;
  */
 @property (nonatomic, readwrite, strong) NSArray *cacheTags;
 
+/**
+ * @brief 已读状态指示器的frame
+ */
+@property (nonatomic, readwrite, assign) CGRect readStatusIndicatorFrame;
 
 @property (nonatomic, strong) TTTAttributedLabel *textLabelForHeightCalculation;
 
@@ -175,6 +179,7 @@ static CGFloat const kMXTextCellSensitiveHeight = 25.0;
         self.cellFromType = message.fromType == MXChatMessageIncoming ? MXChatCellIncoming : MXChatCellOutgoing;
         self.messageContent = message.content;
         self.cellWidth = cellWidth;
+        self.readStatus = message.readStatus;
         if (message.tags) {
             CGFloat maxWidth = cellWidth - kMXCellAvatarToHorizontalEdgeSpacing - kMXCellAvatarDiameter - kMXCellAvatarToBubbleSpacing - kMXCellBubbleToTextHorizontalLargerSpacing - kMXCellBubbleToTextHorizontalSmallerSpacing - kMXCellBubbleMaxWidthToEdgeSpacing;
             NSMutableArray *titleArr = [NSMutableArray array];
@@ -354,6 +359,19 @@ static CGFloat const kMXTextCellSensitiveHeight = 25.0;
     CGSize failureSize = CGSizeMake(ceil(failureImage.size.width * 2 / 3), ceil(failureImage.size.height * 2 / 3));
     self.sendFailureFrame = CGRectMake(self.bubbleImageFrame.origin.x-kMXCellBubbleToIndicatorSpacing-failureSize.width, self.bubbleImageFrame.origin.y+self.bubbleImageFrame.size.height/2-failureSize.height/2, failureSize.width, failureSize.height);
     
+    //已读状态指示器的frame (仅对发送的消息显示)
+    CGFloat statusIndicatorSize = 12.0; // 状态指示器大小
+    if (self.cellFromType == MXChatCellOutgoing) {
+        // 状态指示器放在气泡左边5像素，垂直居中对齐气泡底部
+        self.readStatusIndicatorFrame = CGRectMake(CGRectGetMinX(self.bubbleImageFrame) - statusIndicatorSize - 5, 
+                                                  CGRectGetMaxY(self.bubbleImageFrame) - statusIndicatorSize, 
+                                                  statusIndicatorSize, 
+                                                  statusIndicatorSize);
+    } else {
+        // 接收的消息不显示状态指示器
+        self.readStatusIndicatorFrame = CGRectZero;
+    }
+    
     if (self.cacheTagListView) {
         [self.cacheTagListView updateLayoutWithMaxWidth:maxLabelWidth];
         self.cacheTagListView.frame = CGRectMake(self.bubbleImageFrame.origin.x,  CGRectGetMaxY(self.bubbleImageFrame) + kMXCellBubbleToIndicatorSpacing, self.cacheTagListView.bounds.size.width, self.cacheTagListView.bounds.size.height);
@@ -392,12 +410,20 @@ static CGFloat const kMXTextCellSensitiveHeight = 25.0;
     return self.conversionId;
 }
 
+- (NSString *)getMessageReadStatus {
+    return self.readStatus;
+}
+
 - (void)updateCellSendStatus:(MXChatMessageSendStatus)sendStatus {
     self.sendStatus = sendStatus;
 }
 
 - (void)updateCellMessageId:(NSString *)messageId {
     self.messageId = messageId;
+}
+
+- (void)updateCellReadStatus:(NSNumber *)readStatus {
+    self.readStatus = readStatus;
 }
 
 - (void)updateCellConversionId:(NSString *)conversionId {

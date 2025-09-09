@@ -620,6 +620,10 @@
   return [MXManager isAreaRestricted];
 }
 
++ (BOOL)isAgentToClientMsgStatus {
+  return [MXManager isAgentToClientMsgStatus];
+}
+
 + (void)clearReceivedFiles {
   NSFileManager *fileManager = [NSFileManager defaultManager];
   BOOL isDir = YES;

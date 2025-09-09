@@ -99,6 +99,7 @@
   toMessage.userName = plainMessage.messageUserName;
   toMessage.userAvatarPath = plainMessage.messageAvatar;
   toMessage.conversionId = plainMessage.conversationId;
+  toMessage.readStatus = plainMessage.readStatus;
   switch (plainMessage.sendStatus) {
   case MXMessageSendStatusSuccess:
     toMessage.sendStatus = MXChatMessageSendStatusSuccess;

@@ -83,6 +83,10 @@ static CGFloat const kMXEventCellTextFontSize = 14.0;
     return self.messageId;
 }
 
+- (NSString *)getMessageReadStatus {
+  return @"";
+}
+
 - (NSString *)getMessageConversionId {
     return self.conversionId;
 }

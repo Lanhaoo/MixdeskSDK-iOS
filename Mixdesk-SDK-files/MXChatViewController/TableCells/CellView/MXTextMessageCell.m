@@ -13,6 +13,7 @@
 #import "MXTextCellModel.h"
 #import "TTTAttributedLabel.h"
 #import "MXTagListView.h"
+#import "MXServiceToViewInterface.h"
 
 static const NSInteger kMXTextCellSelectedUrlActionSheetTag = 2000;
 static const NSInteger kMXTextCellSelectedNumberActionSheetTag = 2001;
@@ -30,6 +31,7 @@ static const NSString *kMXTextCellsensitiveWords = @"！消息包含不规范用
     UIImageView *bubbleImageView;
     UIActivityIndicatorView *sendingIndicator;
     UIImageView *failureImageView;
+    UIImageView *readStatusIndicatorView;
 }
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
@@ -75,6 +77,12 @@ static const NSString *kMXTextCellsensitiveWords = @"！消息包含不规范用
         sensitiveTextLabel.font = [UIFont systemFontOfSize:14];
         [sensitiveTextLabel setHidden:YES];
         [self.contentView addSubview:sensitiveTextLabel];
+        
+        //初始化已读状态指示器
+        readStatusIndicatorView = [[UIImageView alloc] init];
+        readStatusIndicatorView.contentMode = UIViewContentModeScaleAspectFit;
+        readStatusIndicatorView.hidden = YES;
+        [self.contentView addSubview:readStatusIndicatorView];
     }
     return self;
 }
@@ -180,6 +188,9 @@ static const NSString *kMXTextCellsensitiveWords = @"！消息包含不规范用
             }
         };
     }
+    
+    //刷新已读状态指示器
+    [self updateReadStatusIndicator:cellModel];
 }
 
 #pragma TTTAttributedLabelDelegate 点击事件
@@ -299,6 +310,98 @@ didLongPressLinkWithPhoneNumber:(NSString *)phoneNumber
     if (buttonIndex == 1) {
         [self.chatCellDelegate resendMessageInCell:self resendData:@{@"text" : textLabel.text}];
     }
+}
+
+#pragma mark - 已读状态指示器
+- (void)updateReadStatusIndicator:(MXTextCellModel *)cellModel {
+    // 默认隐藏状态指示器
+    readStatusIndicatorView.hidden = YES;
+    
+    // 只有发送的消息才显示状态指示器
+    if (cellModel.cellFromType != MXChatCellOutgoing) {
+        return;
+    }
+    
+    // 检查是否需要显示状态指示器（需要isAgentToClientMsgStatus为YES）
+    if (![MXServiceToViewInterface isAgentToClientMsgStatus]) {
+        return;
+    }
+    
+    // 根据readStatus显示对应的状态
+    if (cellModel.readStatus != nil) {
+        NSInteger status = [cellModel.readStatus integerValue];
+        UIImage *statusImage = nil;
+        
+        switch (status) {
+            case 2: // 已送达
+                statusImage = [self createDeliveredStatusImage];
+                break;
+            case 3: // 已读
+                statusImage = [self createReadStatusImage];
+                break;
+            default:
+                // 其他状态不显示
+                return;
+        }
+        
+        if (statusImage) {
+            readStatusIndicatorView.image = statusImage;
+            readStatusIndicatorView.frame = cellModel.readStatusIndicatorFrame;
+            readStatusIndicatorView.hidden = NO;
+        }
+    }
+}
+
+// 创建已送达状态图标（空心圆，边框#bbb）
+- (UIImage *)createDeliveredStatusImage {
+    CGSize size = CGSizeMake(12, 12);
+    UIGraphicsBeginImageContextWithOptions(size, NO, 0);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    
+    // 设置边框颜色为#bbb
+    UIColor *borderColor = [UIColor colorWithRed:0xbb/255.0 green:0xbb/255.0 blue:0xbb/255.0 alpha:1.0];
+    CGContextSetStrokeColorWithColor(context, borderColor.CGColor);
+    CGContextSetLineWidth(context, 1.0);
+    
+    // 绘制空心圆
+    CGRect circleRect = CGRectMake(1, 1, 10, 10);
+    CGContextStrokeEllipseInRect(context, circleRect);
+    
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return image;
+}
+
+// 创建已读状态图标（圆形背景#bbb + 白色勾号）
+- (UIImage *)createReadStatusImage {
+    CGSize size = CGSizeMake(12, 12);
+    UIGraphicsBeginImageContextWithOptions(size, NO, 0);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    
+    // 设置填充颜色为#bbb
+    UIColor *fillColor = [UIColor colorWithRed:0xbb/255.0 green:0xbb/255.0 blue:0xbb/255.0 alpha:1.0];
+    CGContextSetFillColorWithColor(context, fillColor.CGColor);
+    
+    // 绘制圆形背景（填充#bbb）
+    CGRect circleRect = CGRectMake(0, 0, 12, 12);
+    CGContextFillEllipseInRect(context, circleRect);
+    
+    // 设置勾号颜色为白色
+    UIColor *checkColor = [UIColor whiteColor];
+    CGContextSetStrokeColorWithColor(context, checkColor.CGColor);
+    CGContextSetLineWidth(context, 1.5);
+    CGContextSetLineCap(context, kCGLineCapRound);
+    CGContextSetLineJoin(context, kCGLineJoinRound);
+    
+    // 绘制白色勾号
+    CGContextMoveToPoint(context, 3, 6);
+    CGContextAddLineToPoint(context, 5.5, 8.5);
+    CGContextAddLineToPoint(context, 9, 4.5);
+    CGContextStrokePath(context);
+    
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return image;
 }
 
 @end

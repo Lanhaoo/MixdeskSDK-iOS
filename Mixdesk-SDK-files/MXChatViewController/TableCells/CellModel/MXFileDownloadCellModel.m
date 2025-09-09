@@ -20,6 +20,11 @@
 @property (nonatomic, strong) MXFileDownloadMessage *message;
 @property (nonatomic, copy) NSString *downloadingURL;
 
+/**
+ * @brief 已读状态指示器的frame
+ */
+@property (nonatomic, readwrite, assign) CGRect readStatusIndicatorFrame;
+
 @end
 
 @implementation MXFileDownloadCellModel
@@ -27,6 +32,7 @@
 - (id)initCellModelWithMessage:(MXFileDownloadMessage *)message cellWidth:(CGFloat)cellWidth delegate:(id<MXCellModelDelegate>)delegator {
     if (self = [super init]) {
         self.message = message;
+        self.readStatus = message.readStatus;
         if ([MXChatFileUtil fileExistsAtPath:[self savedFilePath] isDirectory:NO]) {
             self.fileDownloadStatus = MXFileDownloadStatusDownloadComplete;
         }
@@ -201,12 +207,20 @@
     return self.message.messageId;
 }
 
+- (NSString *)getMessageReadStatus {
+  return @"";
+}
+
 - (NSString *)getMessageConversionId {
     return self.message.conversionId;
 }
 
 - (void)updateCellSendStatus:(MXChatMessageSendStatus)sendStatus {
     self.message.sendStatus = sendStatus;
+}
+
+- (void)updateCellReadStatus:(NSNumber *)readStatus {
+    self.message.readStatus = readStatus;
 }
 
 - (void)updateCellMessageId:(NSString *)messageId {
@@ -222,6 +236,33 @@
 }
 
 - (void)updateCellFrameWithCellWidth:(CGFloat)cellWidth {
+    // 计算已读状态指示器的frame (仅对发送的消息显示)
+    CGFloat statusIndicatorSize = 12.0; // 状态指示器大小
+    if (self.message.fromType == MXChatMessageOutgoing) {
+        // 由于FileDownload使用动态布局，设置一个基础的气泡frame用于计算
+        CGFloat avatarSpacing = 15.0;
+        CGFloat avatarSize = 44.0;
+        CGFloat bubbleSpacing = 10.0;
+        CGFloat edgeSpacing = 15.0;
+        CGFloat verticalSpacing = 10.0;
+        CGFloat bubbleWidth = cellWidth - avatarSpacing - avatarSize - bubbleSpacing - edgeSpacing;
+        CGFloat bubbleHeight = 80.0; // 文件下载Cell的默认高度
+        
+        CGRect bubbleFrame = CGRectMake(avatarSpacing + avatarSize + bubbleSpacing,
+                                       verticalSpacing,
+                                       bubbleWidth,
+                                       bubbleHeight);
+        
+        // 状态指示器放在气泡左边5像素，垂直居中对齐气泡底部
+        self.readStatusIndicatorFrame = CGRectMake(CGRectGetMinX(bubbleFrame) - statusIndicatorSize - 5,
+                                                  CGRectGetMaxY(bubbleFrame) - statusIndicatorSize,
+                                                  statusIndicatorSize,
+                                                  statusIndicatorSize);
+    } else {
+        // 接收的消息不显示状态指示器
+        self.readStatusIndicatorFrame = CGRectZero;
+    }
+    
     if (self.needsToUpdateUI) {
         self.needsToUpdateUI();
     }

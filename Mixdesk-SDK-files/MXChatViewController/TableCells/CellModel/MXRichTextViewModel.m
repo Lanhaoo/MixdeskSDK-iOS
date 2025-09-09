@@ -18,6 +18,11 @@
 
 @property(nonatomic, strong) MXRichTextMessage *message;
 
+/**
+ * @brief 已读状态指示器的frame
+ */
+@property (nonatomic, readwrite, assign) CGRect readStatusIndicatorFrame;
+
 @end
 
 @implementation MXRichTextViewModel
@@ -27,6 +32,7 @@
                       delegate:(id<MXCellModelDelegate>)delegator {
   if (self = [super init]) {
     self.message = message;
+    self.readStatus = message.readStatus;
     self.summary = self.message.summary;
     self.iconPath = self.message.thumbnail;
     self.content = self.message.content;
@@ -119,6 +125,10 @@
   return self.message.messageId;
 }
 
+- (NSString *)getMessageReadStatus {
+    return self.readStatus;
+}
+
 - (NSString *)getMessageConversionId {
   return self.message.conversionId;
 }
@@ -131,6 +141,10 @@
   self.message.messageId = messageId;
 }
 
+- (void)updateCellReadStatus:(NSNumber *)readStatus {
+    self.readStatus = readStatus;
+}
+
 - (void)updateCellConversionId:(NSString *)conversionId {
   self.message.conversionId = conversionId;
 }
@@ -140,5 +154,31 @@
 }
 
 - (void)updateCellFrameWithCellWidth:(CGFloat)cellWidth {
+  // 为 RichTextView 计算状态指示器frame
+  // 由于这个Cell使用AutoLayout，我们设置一个简化的bubble frame用于计算
+  CGFloat avatarSpacing = 15.0; // 头像到边缘的间距
+  CGFloat avatarSize = 44.0;    // 头像尺寸
+  CGFloat bubbleSpacing = 10.0; // 头像到气泡的间距
+  CGFloat edgeSpacing = 15.0;   // 气泡到边缘的间距
+  CGFloat verticalSpacing = 10.0; // 垂直间距
+  
+  CGRect bubbleFrame = CGRectMake(avatarSpacing + avatarSize + bubbleSpacing, 
+                                 verticalSpacing, 
+                                 cellWidth - avatarSpacing - avatarSize - bubbleSpacing - edgeSpacing, 
+                                 100); // 高度由AutoLayout决定，这里设置一个默认值
+  
+  // 计算已读状态指示器的frame (仅对发送的消息显示)
+  CGFloat statusIndicatorSize = 12.0; // 状态指示器大小
+  if (self.message.fromType == MXChatMessageOutgoing) {
+      // 状态指示器放在气泡左边5像素，垂直居中对齐气泡底部
+      self.readStatusIndicatorFrame = CGRectMake(CGRectGetMinX(bubbleFrame) - statusIndicatorSize - 5,
+                                                CGRectGetMaxY(bubbleFrame) - statusIndicatorSize,
+                                                statusIndicatorSize,
+                                                statusIndicatorSize);
+  } else {
+      // 接收的消息不显示状态指示器
+      self.readStatusIndicatorFrame = CGRectZero;
+  }
 }
+
 @end

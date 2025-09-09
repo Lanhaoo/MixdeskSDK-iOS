@@ -335,6 +335,10 @@
   return true;
 }
 
+- (NSString *)getMessageReadStatus {
+  return @"";
+}
+
 - (NSString *)getCellMessageId {
   return self.message.messageId;
 }
@@ -345,6 +349,10 @@
 
 - (void)updateCellSendStatus:(MXChatMessageSendStatus)sendStatus {
   self.message.sendStatus = sendStatus;
+}
+
+- (void)updateCellReadStatus:(NSNumber *)readStatus {
+  self.message.readStatus = readStatus;
 }
 
 - (void)updateCellMessageId:(NSString *)messageId {

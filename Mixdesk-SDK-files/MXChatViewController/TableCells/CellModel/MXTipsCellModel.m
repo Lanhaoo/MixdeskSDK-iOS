@@ -253,6 +253,10 @@ CGFloat const kMXMessageTipsFontSize = 13.0;
   return @"";
 }
 
+- (NSString *)getMessageReadStatus {
+  return @"";
+}
+
 - (void)updateCellFrameWithCellWidth:(CGFloat)cellWidth {
   CGFloat tipCellHoriSpacing = self.tipType == MXTipTypeRedirect
                                    ? kMXMessageTipsCellHorizontalSpacing

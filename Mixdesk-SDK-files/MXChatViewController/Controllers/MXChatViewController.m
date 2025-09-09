@@ -612,6 +612,32 @@ static CGFloat const kMXChatViewInputBarHeight = 80.0;
   [self.chatTableView reloadData];
 }
 
+// 精确刷新特定的行，避免整个表格重新加载
+- (void)reloadCellsAtIndexPaths:(NSArray<NSIndexPath *> *)indexPaths {
+  NSLog(@"[MXChatViewController] 收到精确刷新请求，indexPaths: %@", indexPaths);
+  if (indexPaths.count == 0) {
+    return;
+  }
+  
+  // 过滤掉超出范围的indexPath
+  NSMutableArray *validIndexPaths = [NSMutableArray array];
+  NSInteger totalRows = [self.chatTableView numberOfRowsInSection:0];
+  
+  for (NSIndexPath *indexPath in indexPaths) {
+    if (indexPath.row < totalRows) {
+      [validIndexPaths addObject:indexPath];
+    } else {
+      NSLog(@"[MXChatViewController] 跳过超出范围的indexPath: %@, 总行数: %ld", indexPath, (long)totalRows);
+    }
+  }
+  
+  if (validIndexPaths.count > 0) {
+    NSLog(@"[MXChatViewController] 正在刷新 %lu 行", (unsigned long)validIndexPaths.count);
+    [self.chatTableView reloadRowsAtIndexPaths:validIndexPaths 
+                              withRowAnimation:UITableViewRowAnimationNone];
+  }
+}
+
 - (void)scrollTableViewToBottomAnimated:(BOOL)animated {
   [self checkEvaluationBarButton];
   [self chatTableViewScrollToBottomWithAnimated:animated];

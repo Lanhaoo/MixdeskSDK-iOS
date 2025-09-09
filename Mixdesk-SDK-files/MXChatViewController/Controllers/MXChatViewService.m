@@ -134,11 +134,13 @@ static NSInteger const kMXChatGetHistoryMessageNumber = 20;
 #pragma 增加cellModel并刷新tableView
 - (void)addCellModelAndReloadTableViewWithModel:
     (id<MXCellModelProtocol>)cellModel {
+  
   if (![self.cellModels containsObject:cellModel]) {
     [self.cellModels addObject:cellModel];
     //        [self.delegate reloadChatTableView];
     //        [self.delegate scrollTableViewToBottomAnimated:YES];
     [self.delegate insertCellAtBottomForModelCount:1];
+  } else {
   }
 }
 
@@ -1772,6 +1774,8 @@ static NSInteger const kMXChatGetHistoryMessageNumber = 20;
         }
       }
     }];
+
+    [self.delegate reloadChatTableView];
   }
   NSString *tipString = eventMessage.tipString;
   if (tipString.length > 0) {
@@ -1791,6 +1795,17 @@ static NSInteger const kMXChatGetHistoryMessageNumber = 20;
         }
       }
     }
+  }
+
+  // 客服已读消息
+  if (eventMessage.eventType == MXChatEventTypeAgentToClientMsgRead) {
+    // 使用更安全的消息状态更新机制，避免重新加载整个数据源
+    [self updateMessageStatusForEventMessage:eventMessage readStatus:@(3)];
+  }
+
+  // 客服收到消息
+  if (eventMessage.eventType == MXChatEventTypeAgentToClientMsgDelivered) {
+    [self updateMessageStatusForEventMessage:eventMessage readStatus:@(2)];
   }
 }
 
@@ -1836,6 +1851,7 @@ static NSInteger const kMXChatGetHistoryMessageNumber = 20;
                                    messagesNumber:0
                                            result:^(NSArray<MXMessage *>
                                                         *messagesArray) {
+                                             
                                              if (self.cellModels) {
                                                [self.cellModels
                                                        removeAllObjects];
@@ -1865,6 +1881,76 @@ static NSInteger const kMXChatGetHistoryMessageNumber = 20;
                                              }
                                            }];
       });
+}
+
+-(void)onceLoadHistoryMessages {
+  NSDate *msgDate = [NSDate date];
+  [MXManager
+      getDatabaseHistoryMessagesWithMsgDate:msgDate
+                             messagesNumber:0
+                                   result:^(NSArray<MXMessage *> *messagesArray) {
+                                    if (self.cellModels) {
+                                               [self.cellModels
+                                                       removeAllObjects];
+                                             }
+                                     NSArray *receivedMessages = [self
+                                                 convertToChatViewMessageWithMXMessages:
+                                                     messagesArray];
+                                             if (receivedMessages) {
+                                               [self
+                                                   saveToCellModelsWithMessages:
+                                                       receivedMessages
+                                                           isInsertAtFirstIndex:
+                                                               NO];
+                                             }
+                                   }];
+}
+
+// 按照id 更新消息的已读和已送达状态
+// 目前只能通过更新单个消息的readStatus 来更新, 直接使用 reloadData 有问题
+- (void)updateMessageStatusForEventMessage:(MXEventMessage *)eventMessage readStatus:(NSNumber *)readStatus {
+  dispatch_async(dispatch_get_main_queue(), ^{    
+    for (NSInteger i = 0; i < self.cellModels.count; i++) {
+      id<MXCellModelProtocol> cellModel = [self.cellModels objectAtIndex:i];
+      NSString *messageId = [cellModel getCellMessageId];
+      NSNumber *messagerReadStatus = [cellModel getMessageReadStatus] ?: @2;
+      
+      // 根据消息ID或其他条件匹配需要更新的消息
+      if (messageId && [self shouldUpdateMessageStatus:messageId forEvent:eventMessage] && messagerReadStatus.integerValue < readStatus) {
+        // 更新单个cell的状态
+          if ([cellModel respondsToSelector:@selector(updateCellSendStatus:)]) {
+            [cellModel updateCellReadStatus:readStatus];
+
+            dispatch_after(
+              dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)),
+              dispatch_get_main_queue(), ^{
+                [self updateCellWithIndex:i needToBottom:NO];
+              }
+            );
+          }
+      }
+    }
+  });
+}
+
+// 判断是否需要更新消息状态
+- (BOOL)shouldUpdateMessageStatus:(NSString *)messageId forEvent:(MXEventMessage *)eventMessage {
+  if (eventMessage.extraInfo && eventMessage.extraInfo[@"msgIds"]) {
+    if ([eventMessage.extraInfo[@"msgIds"] isKindOfClass:[NSArray class]]) {
+      // 直接将 msgIds 转换为 字符串数组
+      NSArray *msgIds = [eventMessage.extraInfo[@"msgIds"] map:^id(id obj) {
+        return [NSString stringWithFormat:@"%@", obj];
+      }];
+      
+      // 将messageId 转换为 字符串
+      NSString *messageIdString = [NSString stringWithFormat:@"%@", messageId];
+
+      if ([msgIds containsObject:messageIdString]) {
+        return YES;
+      }
+    }
+  }
+  return NO; 
 }
 
 #pragma mark - viewInface delegate
@@ -1916,6 +2002,7 @@ static NSInteger const kMXChatGetHistoryMessageNumber = 20;
         }
       });
 }
+
 
 - (void)didReceiveTipsContent:(NSString *)tipsContent {
   [self didReceiveTipsContent:tipsContent showLines:YES];

@@ -99,6 +99,11 @@ static CGFloat const kMXCellImageRatio = 0.75;
  */
 @property (nonatomic, readwrite, strong) NSString *conversionId;
 
+/**
+ * @brief 已读状态指示器的frame
+ */
+@property (nonatomic, readwrite, assign) CGRect readStatusIndicatorFrame;
+
 @end
 
 @implementation MXPhotoCardCellModel
@@ -114,6 +119,7 @@ static CGFloat const kMXCellImageRatio = 0.75;
         self.cellWidth = cellWidth;
         self.delegate = delegate;
         self.messageId = message.messageId;
+        self.readStatus = message.readStatus;
         self.conversionId = message.conversionId;
         self.date = message.date;
         self.targetUrl = message.targetUrl;
@@ -276,6 +282,19 @@ static CGFloat const kMXCellImageRatio = 0.75;
     //loading image的indicator
     self.loadingIndicatorFrame = CGRectMake(self.bubbleFrame.size.width/2-kMXCellIndicatorDiameter/2, self.bubbleFrame.size.height/2-kMXCellIndicatorDiameter/2, kMXCellIndicatorDiameter, kMXCellIndicatorDiameter);
     
+    //已读状态指示器的frame (仅对发送的消息显示)
+    CGFloat statusIndicatorSize = 12.0; // 状态指示器大小
+    if (self.cellFromType == MXChatCellOutgoing) {
+        // 状态指示器放在气泡左边5像素，垂直居中对齐气泡底部
+        self.readStatusIndicatorFrame = CGRectMake(CGRectGetMinX(self.bubbleFrame) - statusIndicatorSize - 5,
+                                                  CGRectGetMaxY(self.bubbleFrame) - statusIndicatorSize,
+                                                  statusIndicatorSize,
+                                                  statusIndicatorSize);
+    } else {
+        // 接收的消息不显示状态指示器
+        self.readStatusIndicatorFrame = CGRectZero;
+    }
+    
     //计算cell的高度
     self.cellHeight = self.bubbleFrame.origin.y + self.bubbleFrame.size.height + kMXCellAvatarToVerticalEdgeSpacing;
 
@@ -307,6 +326,10 @@ static CGFloat const kMXCellImageRatio = 0.75;
     return self.messageId;
 }
 
+- (NSString *)getMessageReadStatus {
+    return self.readStatus;
+}
+
 - (NSString *)getMessageConversionId {
     return self.conversionId;
 }
@@ -325,6 +348,7 @@ static CGFloat const kMXCellImageRatio = 0.75;
 
 - (void)updateCellFrameWithCellWidth:(CGFloat)cellWidth {
     self.cellWidth = cellWidth;
+
 //    if (self.cellFromType == MXChatCellOutgoing) {
 //        //头像的frame
 //        if ([MXChatViewConfig sharedConfig].enableOutgoingAvatar) {

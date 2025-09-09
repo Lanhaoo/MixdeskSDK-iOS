@@ -166,6 +166,11 @@ static CGFloat const kMXCellImageRatio = 0.75;
  */
 @property (nonatomic, readwrite, strong) NSString *conversionId;
 
+/**
+ * @brief 已读状态指示器的frame
+ */
+@property (nonatomic, readwrite, assign) CGRect readStatusIndicatorFrame;
+
 @end
 
 @implementation MXProductCardCellModel
@@ -185,6 +190,7 @@ static CGFloat const kMXCellImageRatio = 0.75;
         self.productPictureUrl = message.pictureUrl;
         self.messageId = message.messageId;
         self.conversionId = message.conversionId;
+        self.readStatus = message.readStatus;
         self.date = message.date;
         self.title = message.title;
         self.productUrl = message.productUrl;
@@ -370,6 +376,19 @@ static CGFloat const kMXCellImageRatio = 0.75;
     CGSize failureSize = CGSizeMake(ceil(failureImage.size.width * 2 / 3), ceil(failureImage.size.height * 2 / 3));
     self.sendFailureFrame = CGRectMake(self.bubbleFrame.origin.x-kMXCellBubbleToIndicatorSpacing-failureSize.width, self.bubbleFrame.origin.y+self.bubbleFrame.size.height/2-failureSize.height/2, failureSize.width, failureSize.height);
     
+    //已读状态指示器的frame (仅对发送的消息显示)
+    CGFloat statusIndicatorSize = 12.0; // 状态指示器大小
+    if (self.cellFromType == MXChatCellOutgoing) {
+        // 状态指示器放在气泡左边5像素，垂直居中对齐气泡底部
+        self.readStatusIndicatorFrame = CGRectMake(CGRectGetMinX(self.bubbleFrame) - statusIndicatorSize - 5,
+                                                  CGRectGetMaxY(self.bubbleFrame) - statusIndicatorSize,
+                                                  statusIndicatorSize,
+                                                  statusIndicatorSize);
+    } else {
+        // 接收的消息不显示状态指示器
+        self.readStatusIndicatorFrame = CGRectZero;
+    }
+    
     //计算cell的高度
     self.cellHeight = self.bubbleFrame.origin.y + self.bubbleFrame.size.height + kMXCellAvatarToVerticalEdgeSpacing;
 
@@ -401,6 +420,10 @@ static CGFloat const kMXCellImageRatio = 0.75;
     return self.messageId;
 }
 
+- (NSString *)getMessageReadStatus {
+    return self.readStatus;
+}
+
 - (NSString *)getMessageConversionId {
     return self.conversionId;
 }
@@ -411,6 +434,10 @@ static CGFloat const kMXCellImageRatio = 0.75;
 
 - (void)updateCellSendStatus:(MXChatMessageSendStatus)sendStatus {
     self.sendStatus = sendStatus;
+}
+
+- (void)updateCellReadStatus:(NSNumber *)readStatus {
+    self.readStatus = readStatus;
 }
 
 - (void)updateCellConversionId:(NSString *)conversionId {
@@ -425,6 +452,5 @@ static CGFloat const kMXCellImageRatio = 0.75;
     self.cellWidth = cellWidth;
     [self setModelsWithContentImage:self.image cellFromType:(MXChatMessageFromType)self.cellFromType cellWidth:cellWidth];
 }
-
 
 @end

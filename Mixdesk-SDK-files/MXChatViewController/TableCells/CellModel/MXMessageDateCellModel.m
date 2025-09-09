@@ -86,6 +86,10 @@
     return @"";
 }
 
+- (NSString *)getMessageReadStatus {
+  return @"";
+}
+
 - (NSString *)getMessageConversionId {
     return @"";
 }

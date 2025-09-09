@@ -29,6 +29,9 @@ typedef enum : NSUInteger {
   MXChatEventTypeAiAutomationRedirect = 14,      // ai automation 相关转接
   MXChatEventTypeAiAutomationAssign = 15,        // ai automation 相关转接
   MXChatEventTypeAutomationEndConversation = 16, // automation 结束对话
+
+  MXChatEventTypeAgentToClientMsgDelivered = 17, // 客服收到消息
+  MXChatEventTypeAgentToClientMsgRead = 18,      // 客服已读消息
 } MXChatEventType;
 
 @interface MXEventMessage : MXBaseMessage
@@ -43,6 +46,8 @@ typedef enum : NSUInteger {
 
 @property(nonatomic, strong) NSArray *cardData; // 卡片数据
 
+// 存放任意值 extraInfo
+@property(nonatomic, strong) NSDictionary *extraInfo;
 /**
  * 初始化message
  */

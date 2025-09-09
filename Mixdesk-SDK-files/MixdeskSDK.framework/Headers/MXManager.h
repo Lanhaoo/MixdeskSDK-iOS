@@ -17,7 +17,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-#define MXSDKVersion @"1.0.4"
+#define MXSDKVersion @"1.0.5"
 @protocol MXManagerDelegate <NSObject>
 
 /**
@@ -484,6 +484,14 @@
 + (void)updateMessageIds:(NSArray *)messageIds toReadStatus:(BOOL)isRead;
 
 /**
+ * 修改某条消息的已读状态
+ * @param messageIds 被修改的消息id数组
+ * @param readStatus   该消息 已送达 | 已读
+ */
++ (void)updateMessageReadStatusByIds:(NSArray *)messageIds readStatus:(NSNumber *)readStatus;
+
+
+/**
  * 将所有消息标记为已读
  */
 + (void)markAllMessagesAsRead;
@@ -780,5 +788,10 @@
  当前企业是否地区限制
  */
 + (BOOL)isAreaRestricted;
+
+/**
+ 当前企业是否能查看客服的已读状态
+ */
++ (BOOL)isAgentToClientMsgStatus;
 
 @end

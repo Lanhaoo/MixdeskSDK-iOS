@@ -35,6 +35,9 @@
     bool videoMsgStatus; // 是否可以发送video类型消息
 
 @property(nonatomic, readonly, assign)
+    bool agentToClientMsgStatus; // 是否可以查看访客消息是否已读状态
+
+@property(nonatomic, readonly, assign)
     bool hideHistoryConvoStatus; // 是否隐藏历史对话
 
 @property(nonatomic, strong) MXPreChatData *preChatData; // 讯前表单数据模型

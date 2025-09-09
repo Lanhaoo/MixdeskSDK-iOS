@@ -129,6 +129,11 @@ typedef NS_ENUM(NSUInteger, MXChatCellFromType) {
 - (NSString *)getCellMessageId;
 
 /**
+ *  @return cell的消息已读状态.
+ */
+- (NSString *)getMessageReadStatus;
+
+/**
  *  根据cellWidth来重新布局
  *
  *  @param cellWidth cell宽度
@@ -147,6 +152,13 @@ typedef NS_ENUM(NSUInteger, MXChatCellFromType) {
  *  @param sendType 发送类型
  */
 - (void)updateCellSendStatus:(MXChatMessageSendStatus)sendStatus;
+
+/**
+ *  更新cell的readStatus
+ *
+ *  @param readStatus 已读状态
+ */
+- (void)updateCellReadStatus:(NSNumber *)readStatus;
 
 /**
  *  更新cell的messageId
@@ -191,6 +203,12 @@ typedef NS_ENUM(NSUInteger, MXChatCellFromType) {
  */
 - (void)updateMediaServerPath:(NSString *)serverPath;
 
+/**
+ *  更新cell的readStatus
+ *
+ *  @param readStatus 消息状态
+ */
+- (void)updateCellReadStatus:(NSNumber *)readStatus;
 
 @end
 

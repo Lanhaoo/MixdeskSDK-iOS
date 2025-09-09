@@ -90,6 +90,16 @@ typedef void (^VideoDownloadProgress)(float progress);
  */
 @property (nonatomic, readonly, assign) BOOL isDownloading;
 
+/**
+ * @brief 消息的已读状态 (2: 已送达, 3: 已读)
+ */
+@property (nonatomic, assign) NSNumber *readStatus;
+
+/**
+ * @brief 已读状态指示器的frame
+ */
+@property (nonatomic, readonly, assign) CGRect readStatusIndicatorFrame;
+
 - (MXVideoCellModel *)initCellModelWithMessage:(MXVideoMessage *)message
                                      cellWidth:(CGFloat)cellWidth
                                       delegate:(id<MXCellModelDelegate>)delegate;

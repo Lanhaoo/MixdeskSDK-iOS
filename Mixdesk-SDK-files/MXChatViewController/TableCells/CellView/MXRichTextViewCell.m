@@ -14,6 +14,7 @@
 #import "MXRichTextViewModel.h"
 #import "MXWindowUtil.h"
 #import "MXAssetUtil.h"
+#import "MXServiceToViewInterface.h"
 
 CGFloat internalSpace = 10;
 CGFloat internalImageToTextSpace = kMXCellBubbleToTextHorizontalLargerSpacing;
@@ -27,6 +28,9 @@ CGFloat internalImageWidth = 80;
 @property (nonatomic, strong) UIImageView *indicatorImageView;
 
 @property (nonatomic, strong) MXRichTextViewModel *viewModel;
+
+// 已读状态指示器
+@property (nonatomic, strong) UIImageView *readStatusIndicatorView;
 
 @end
 
@@ -45,6 +49,9 @@ CGFloat internalImageWidth = 80;
 - (void)updateCellWithCellModel:(id<MXCellModelProtocol>)model {
     self.viewModel = model;
     [self bind:model];
+    
+    // 更新已读状态指示器
+    [self updateReadStatusIndicator:(MXRichTextViewModel *)model];
 }
 
 //通过将 UI 于 viewModel 的响应方法绑定，使得 UI 可以响应数据的变化
@@ -112,6 +119,12 @@ CGFloat internalImageWidth = 80;
     [self.itemsView addSubview:self.iconImageView];
     [self.itemsView addSubview:self.contentLabel];
     [self.itemsView addSubview:self.indicatorImageView];
+    
+    // 初始化已读状态指示器
+    self.readStatusIndicatorView = [[UIImageView alloc] init];
+    self.readStatusIndicatorView.contentMode = UIViewContentModeScaleAspectFit;
+    self.readStatusIndicatorView.hidden = YES;
+    [self.contentView addSubview:self.readStatusIndicatorView];
 }
 
 - (void)makeConstraints {
@@ -167,6 +180,94 @@ CGFloat internalImageWidth = 80;
         _itemsView.layer.borderWidth = 0.5;
     }
     return _itemsView;
+}
+
+#pragma mark - 已读状态指示器
+
+// 创建已送达状态图标（空心圆，边框#bbb）
+- (UIImage *)createDeliveredStatusImage {
+    CGFloat size = 12.0;
+    UIGraphicsBeginImageContextWithOptions(CGSizeMake(size, size), NO, 0.0);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    
+    // 设置边框颜色 #bbb
+    CGContextSetStrokeColorWithColor(context, [UIColor colorWithRed:187.0/255.0 green:187.0/255.0 blue:187.0/255.0 alpha:1.0].CGColor);
+    CGContextSetLineWidth(context, 1.0);
+    
+    // 画空心圆
+    CGContextAddEllipseInRect(context, CGRectMake(0.5, 0.5, size-1, size-1));
+    CGContextStrokePath(context);
+    
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return image;
+}
+
+// 创建已读状态图标（圆形背景#bbb + 白色勾号）
+- (UIImage *)createReadStatusImage {
+    CGFloat size = 12.0;
+    UIGraphicsBeginImageContextWithOptions(CGSizeMake(size, size), NO, 0.0);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    
+    // 填充圆形背景 #bbb
+    CGContextSetFillColorWithColor(context, [UIColor colorWithRed:187.0/255.0 green:187.0/255.0 blue:187.0/255.0 alpha:1.0].CGColor);
+    CGContextFillEllipseInRect(context, CGRectMake(0, 0, size, size));
+    
+    // 画白色勾号
+    CGContextSetStrokeColorWithColor(context, [UIColor whiteColor].CGColor);
+    CGContextSetLineWidth(context, 1.5);
+    CGContextSetLineCap(context, kCGLineCapRound);
+    CGContextSetLineJoin(context, kCGLineJoinRound);
+    
+    // 勾号路径
+    CGContextMoveToPoint(context, size * 0.25, size * 0.5);
+    CGContextAddLineToPoint(context, size * 0.45, size * 0.7);
+    CGContextAddLineToPoint(context, size * 0.75, size * 0.3);
+    CGContextStrokePath(context);
+    
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return image;
+}
+
+// 更新已读状态指示器
+- (void)updateReadStatusIndicator:(MXRichTextViewModel *)cellModel {
+    self.readStatusIndicatorView.hidden = YES;
+
+    return;
+    
+    // 移除之前的约束
+    [self.readStatusIndicatorView removeFromSuperview];
+    
+    // 只有发送消息且启用了状态显示才显示指示器
+    if (![MXServiceToViewInterface isAgentToClientMsgStatus] || cellModel.readStatus == nil) {
+        return;
+    }
+    
+    NSInteger status = [cellModel.readStatus integerValue];
+    UIImage *statusImage = nil;
+    
+    switch (status) {
+        case 2: // 已送达
+            statusImage = [self createDeliveredStatusImage];
+            break;
+        case 3: // 已读
+            statusImage = [self createReadStatusImage];
+            break;
+        default:
+            return;
+    }
+    
+    if (statusImage) {
+        self.readStatusIndicatorView.image = statusImage;
+        [self.contentView addSubview:self.readStatusIndicatorView];
+        
+        // 使用frame设置位置（基于readStatusIndicatorFrame）
+        self.readStatusIndicatorView.frame = cellModel.readStatusIndicatorFrame;
+        self.readStatusIndicatorView.hidden = NO;
+        self.readStatusIndicatorView.backgroundColor = [UIColor clearColor];
+        [self.contentView bringSubviewToFront:self.readStatusIndicatorView];
+    }
 }
 
 @end

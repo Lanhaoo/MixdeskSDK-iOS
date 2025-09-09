@@ -139,6 +139,11 @@ static CGFloat const kMXCellVoiceNotPlayPointViewDiameter = 8.0;
  */
 @property (nonatomic, readwrite, strong) NSString *conversionId;
 
+/**
+ * @brief 已读状态指示器的frame
+ */
+@property (nonatomic, readwrite, assign) CGRect readStatusIndicatorFrame;
+
 @end
 
 @implementation MXVoiceCellModel {
@@ -163,6 +168,7 @@ static CGFloat const kMXCellVoiceNotPlayPointViewDiameter = 8.0;
         self.messageId = message.messageId;
         self.conversionId = message.conversionId;
         self.sendStatus = message.sendStatus;
+        self.readStatus = message.readStatus;
         self.date = message.date;
         self.avatarPath = @"";
         self.cellHeight = 44.0;
@@ -341,7 +347,7 @@ static CGFloat const kMXCellVoiceNotPlayPointViewDiameter = 8.0;
         //语音图片的frame
         self.voiceImageFrame = CGRectMake(self.bubbleImageFrame.size.width-kMXCellVoiceImageToBubbleSpacing-voiceImageSize.width, self.bubbleImageFrame.size.height/2-voiceImageSize.height/2, voiceImageSize.width, voiceImageSize.height);
         //语音时长的frame
-        self.durationLabelFrame = CGRectMake(self.bubbleImageFrame.origin.x-kMXCellVoiceDurationLabelToBubbleSpacing-durationTextWidth, self.bubbleImageFrame.origin.y+self.bubbleImageFrame.size.height/2-durationTextHeight/2, durationTextWidth, durationTextHeight);
+        self.durationLabelFrame = CGRectMake(self.bubbleImageFrame.origin.x-kMXCellVoiceDurationLabelToBubbleSpacing-durationTextWidth, self.bubbleImageFrame.origin.y, durationTextWidth, durationTextHeight);
     } else {
         //收到的消息
         self.cellFromType = MXChatCellIncoming;
@@ -380,6 +386,28 @@ static CGFloat const kMXCellVoiceNotPlayPointViewDiameter = 8.0;
     //计算cell的高度
     self.cellHeight = self.bubbleImageFrame.origin.y + self.bubbleImageFrame.size.height + kMXCellAvatarToVerticalEdgeSpacing;
     
+    // 计算已读状态指示器的frame
+    [self calculateReadStatusIndicatorFrame];
+    
+}
+
+- (void)calculateReadStatusIndicatorFrame {
+    // 统一设置已读状态指示器的frame
+    CGFloat statusIndicatorSize = 12.0; // 状态指示器大小
+    if (self.cellFromType == MXChatCellOutgoing) {        
+        // 状态指示器放在气泡左下角
+        // durationLabel在左上角，状态指示器在左下角，避免重叠
+        CGFloat statusIndicatorX = self.bubbleImageFrame.origin.x - statusIndicatorSize - 5;
+        CGFloat statusIndicatorY = CGRectGetMaxY(self.bubbleImageFrame) - statusIndicatorSize;
+        
+        self.readStatusIndicatorFrame = CGRectMake(statusIndicatorX,
+                                                  statusIndicatorY,
+                                                  statusIndicatorSize,
+                                                  statusIndicatorSize);
+        } else {
+        // 接收的消息不显示状态指示器
+        self.readStatusIndicatorFrame = CGRectZero;
+    }
 }
 
 #pragma MXCellModelProtocol
@@ -407,6 +435,10 @@ static CGFloat const kMXCellVoiceNotPlayPointViewDiameter = 8.0;
     return self.messageId;
 }
 
+- (NSString *)getMessageReadStatus {
+    return self.readStatus;
+}
+
 - (NSString *)getMessageConversionId {
     return self.conversionId;
 }
@@ -419,6 +451,10 @@ static CGFloat const kMXCellVoiceNotPlayPointViewDiameter = 8.0;
     self.messageId = messageId;
 }
 
+- (void)updateCellReadStatus:(NSNumber *)readStatus {
+    self.readStatus = readStatus;
+}
+
 - (void)updateCellConversionId:(NSString *)conversionId {
     self.conversionId = conversionId;
 }
@@ -428,6 +464,7 @@ static CGFloat const kMXCellVoiceNotPlayPointViewDiameter = 8.0;
 }
 
 - (void)updateCellFrameWithCellWidth:(CGFloat)cellWidth {
+    NSLog(@"Voice updateCellFrameWithCellWidth called with cellWidth: %.2f", cellWidth);
     self.cellWidth = cellWidth;
 //    if (self.cellFromType == MXChatCellOutgoing) {
 //        //头像的frame
@@ -506,7 +543,7 @@ static CGFloat const kMXCellVoiceNotPlayPointViewDiameter = 8.0;
         //语音图片的frame
         self.voiceImageFrame = CGRectMake(self.bubbleImageFrame.size.width-kMXCellVoiceImageToBubbleSpacing-voiceImageSize.width, self.bubbleImageFrame.size.height/2-voiceImageSize.height/2, voiceImageSize.width, voiceImageSize.height);
         //语音时长的frame
-        self.durationLabelFrame = CGRectMake(self.bubbleImageFrame.origin.x-kMXCellVoiceDurationLabelToBubbleSpacing-durationTextWidth, self.bubbleImageFrame.origin.y+self.bubbleImageFrame.size.height/2-durationTextHeight/2, durationTextWidth, durationTextHeight);
+        self.durationLabelFrame = CGRectMake(self.bubbleImageFrame.origin.x-kMXCellVoiceDurationLabelToBubbleSpacing-durationTextWidth, self.bubbleImageFrame.origin.y, durationTextWidth, durationTextHeight);
     } else {
         //收到的消息
         self.cellFromType = MXChatCellIncoming;
@@ -525,6 +562,9 @@ static CGFloat const kMXCellVoiceNotPlayPointViewDiameter = 8.0;
         //未播放按钮的frame
         self.notPlayViewFrame = CGRectMake(self.bubbleImageFrame.origin.x + self.bubbleImageFrame.size.width + kMXCellVoiceDurationLabelToBubbleSpacing, self.bubbleImageFrame.origin.y, kMXCellVoiceNotPlayPointViewDiameter, kMXCellVoiceNotPlayPointViewDiameter);
     }
+    
+    // 重新计算已读状态指示器的frame
+    [self calculateReadStatusIndicatorFrame];
 }
 
 - (void)updateOutgoingAvatarImage:(UIImage *)avatarImage {

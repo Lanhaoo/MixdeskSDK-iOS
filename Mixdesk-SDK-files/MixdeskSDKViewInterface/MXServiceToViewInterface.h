@@ -618,4 +618,9 @@
  */
 + (BOOL)isAreaRestricted;
 
+/**
+ 当前企业是否能查看客服的已读状态
+ */
+ + (BOOL)isAgentToClientMsgStatus;
+ 
 @end

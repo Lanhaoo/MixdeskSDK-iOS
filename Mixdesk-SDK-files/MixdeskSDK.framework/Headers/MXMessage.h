@@ -31,7 +31,10 @@ typedef enum : NSUInteger {
   MXMessageActionAiAutomationRedirect = 16,     // ai automation 相关转接
   MXMessageActionAiAutomationAssign = 17,       // ai automation 相关转接
   MXMessageActionAutomationEndConversation = 18, // automation 相关结束对话
-  MXMessageActionAutomationEvaluation = 19       // automation 相关邀请评价
+  MXMessageActionAutomationEvaluation = 19,       // automation 相关邀请评价
+
+  MXMessageActionAgentToClientMsgDelivered = 20, // 客服收到消息
+  MXMessageActionAgentToClientMsgRead = 21,      // 客服已读消息
 } MXMessageAction;
 
 typedef enum : NSUInteger {

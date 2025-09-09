@@ -57,6 +57,10 @@ static CGFloat const kMXSplitLineCellLableWidth = 150.0;
     return @"";
 }
 
+- (NSString *)getMessageReadStatus {
+  return @"";
+}
+
 - (UITableViewCell *)getCellWithReuseIdentifier:(NSString *)cellReuseIdentifer {
     return [[MXSplitLineCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellReuseIdentifer];;
 }

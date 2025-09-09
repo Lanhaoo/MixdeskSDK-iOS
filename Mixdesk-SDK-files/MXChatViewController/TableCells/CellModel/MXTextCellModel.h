@@ -133,6 +133,16 @@
 @property (nonatomic, assign) MXChatMessageSendStatus sendStatus;
 
 /**
+ * @brief 消息的已读状态 (2: 已送达, 3: 已读)
+ */
+@property (nonatomic, assign) NSNumber *readStatus;
+
+/**
+ * @brief 已读状态指示器的frame
+ */
+@property (nonatomic, readonly, assign) CGRect readStatusIndicatorFrame;
+
+/**
  * @brief 标签的tagList
  */
 @property (nonatomic, readonly, strong) MXTagListView *cacheTagListView;

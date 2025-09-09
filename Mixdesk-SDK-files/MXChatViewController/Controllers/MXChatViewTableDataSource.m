@@ -30,15 +30,23 @@
 - (NSInteger)tableView:(UITableView *)tableView
  numberOfRowsInSection:(NSInteger)section
 {
-    return [self.chatViewService.cellModels count];
+    NSInteger count = [self.chatViewService.cellModels count];
+    return count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView
          cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    // 添加安全检查，防止数组越界崩溃
+    if (indexPath.row >= [self.chatViewService.cellModels count]) {
+        // 返回一个默认的空cell，避免崩溃
+        UITableViewCell *emptyCell = [[UITableViewCell alloc] init];
+        return emptyCell;
+    }
+    
     id<MXCellModelProtocol> cellModel = [self.chatViewService.cellModels objectAtIndex:indexPath.row];
     NSString *cellModelName = NSStringFromClass([cellModel class]);
-//    NSString *messageId = [cellModel getCellMessageId]?:NSStringFromClass([cellModel class]);
+    
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellModelName];
     if (!cell){
         cell = [cellModel getCellWithReuseIdentifier:cellModelName];
@@ -53,8 +61,5 @@
     [(MXChatBaseCell*)cell updateCellWithCellModel:cellModel];
     return cell;
 }
-
-
-
 
 @end

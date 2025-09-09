@@ -30,6 +30,9 @@ static CGFloat const kMXEvaluationSectionSpacing = 16.0; // 区块之间的间�
 
 @interface MXEvaluationView () <CustomIOSAlertViewDelegate, UITextFieldDelegate>
 
+@property (nonatomic, strong) UIScrollView *scrollView;
+@property (nonatomic, strong) UIView *contentView;
+
 @end
 
 @implementation MXEvaluationView {
@@ -96,11 +99,27 @@ static CGFloat const kMXEvaluationSectionSpacing = 16.0; // 区块之间的间�
   CGFloat initialHeight = 200;
   CGFloat viewWidth = deviceFrame.size.width - originX * 2;
 
-  UIView *customView = [[UIView alloc] init];
-  customView.frame = CGRectMake(0, 0, viewWidth, initialHeight);
-  customView.backgroundColor = [UIColor whiteColor];
-  customView.layer.cornerRadius = 8.0;
-  customView.clipsToBounds = YES;
+  // 创建主容器（始终使用 ScrollView）
+  UIScrollView *scrollView = [[UIScrollView alloc] init];
+  scrollView.frame = CGRectMake(0, 0, viewWidth, initialHeight);
+  scrollView.backgroundColor = [UIColor whiteColor];
+  scrollView.layer.cornerRadius = 8.0;
+  scrollView.clipsToBounds = YES;
+  scrollView.showsVerticalScrollIndicator = YES;
+  scrollView.showsHorizontalScrollIndicator = NO;
+  scrollView.bounces = NO;
+  scrollView.alwaysBounceVertical = NO;
+  
+  // 保存 scrollView 引用
+  self.scrollView = scrollView;
+  
+  // 创建内容容器视图
+  UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, viewWidth, initialHeight)];
+  contentView.backgroundColor = [UIColor whiteColor];
+  [scrollView addSubview:contentView];
+  
+  // 保存 contentView 引用
+  self.contentView = contentView;
 
   // alertView 标题 - 智能计算文本布局
   NSString *titleText = [MXBundleUtil localizedStringForKey:@"mx_evaluation_title"];
@@ -117,7 +136,7 @@ static CGFloat const kMXEvaluationSectionSpacing = 16.0; // 区块之间的间�
   alertViewTitle.lineBreakMode = NSLineBreakByWordWrapping; // 按词换行
   
   // 计算可用宽度 - 留出足够的左右边距
-  CGFloat availableWidth = customView.frame.size.width - 40; // 左右20点，右边20点
+  CGFloat availableWidth = contentView.frame.size.width - 40; // 左右20点，右边20点
   
   // 使用attributedText获得更好的换行效果
   NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
@@ -134,25 +153,22 @@ static CGFloat const kMXEvaluationSectionSpacing = 16.0; // 区块之间的间�
   
   alertViewTitle.attributedText = attributedText;
   
-  // 使用attributedText计算高度
+  // 使用attributedText计算高度，使用完整可用宽度确保文字完全显示
   CGSize maxSize = CGSizeMake(availableWidth, CGFLOAT_MAX);
   CGRect boundingRect = [attributedText boundingRectWithSize:maxSize
                                                    options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
                                                    context:nil];
   
-  // 增加宽度收缩因子，保证文本有更高的换行概率
-  CGFloat widthShrinkFactor = 0.9;
-  
-  // 设置frame - 将标签宽度缩小一点，增加换行概率
+  // 设置frame - 使用完整可用宽度确保文字完全显示
   alertViewTitle.frame = CGRectMake(20, kMXEvaluationVerticalSpacing,
-                                  availableWidth * widthShrinkFactor,
+                                  availableWidth,
                                   ceil(boundingRect.size.height) + 10);
   
   // 居中标题
-  alertViewTitle.center = CGPointMake(customView.frame.size.width / 2, 
+  alertViewTitle.center = CGPointMake(contentView.frame.size.width / 2, 
                                     alertViewTitle.center.y);
 
-  [customView addSubview:alertViewTitle];
+  [contentView addSubview:alertViewTitle];
 
   [MXServiceToViewInterface
       getEnterpriseConfigInfoWithCache:YES
@@ -185,24 +201,25 @@ static CGFloat const kMXEvaluationSectionSpacing = 16.0; // 区块之间的间�
                                                                    options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
                                                                    context:nil];
                                   
-                                  // 更新frame
+                                  // 更新frame - 确保使用完整可用宽度
                                   CGRect frame = alertViewTitle.frame;
+                                  frame.size.width = availableWidth;
                                   frame.size.height = ceil(boundingRect.size.height) + 10;
                                   alertViewTitle.frame = frame;
                                   
                                   // 保持水平居中
-                                  alertViewTitle.center = CGPointMake(customView.frame.size.width / 2, alertViewTitle.center.y);
+                                  alertViewTitle.center = CGPointMake(self.contentView.frame.size.width / 2, alertViewTitle.center.y);
                                   
                                   // 重新计算弹窗高度
-                                  [self updateCustomViewHeight:customView];
+                                  [self updateCustomViewHeight];
                                 }
                                 if (enterprise.configInfo
                                         .evaluationProblemFeedback.length > 0) {
-                                  evaluationProblemFeedback =
+                                  self->evaluationProblemFeedback =
                                       enterprise.configInfo
                                           .evaluationProblemFeedback;
                                 }
-                                evaluationType =
+                                self->evaluationType =
                                     enterprise.configInfo.evaluation_type;
                               }];
 
@@ -216,7 +233,7 @@ static CGFloat const kMXEvaluationSectionSpacing = 16.0; // 区块之间的间�
     // 添加问题解决状态按钮
     buttonHeight = 44;
     CGFloat buttonWidth =
-        (customView.frame.size.width - 30) / 2; // 左右间距各掅10px，中间10px
+        (contentView.frame.size.width - 30) / 2; // 左右间距各掅10px，中间10px
 
     // 创建"问题已解决"按钮
     solvedButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -250,7 +267,7 @@ static CGFloat const kMXEvaluationSectionSpacing = 16.0; // 区块之间的间�
     [solvedButton addTarget:self
                      action:@selector(solvedButtonTapped:)
            forControlEvents:UIControlEventTouchUpInside];
-    [customView addSubview:solvedButton];
+    [contentView addSubview:solvedButton];
 
     // 创建"问题未解决"按钮
     unsolvedButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -284,7 +301,7 @@ static CGFloat const kMXEvaluationSectionSpacing = 16.0; // 区块之间的间�
     [unsolvedButton addTarget:self
                        action:@selector(unsolvedButtonTapped:)
              forControlEvents:UIControlEventTouchUpInside];
-    [customView addSubview:unsolvedButton];
+    [contentView addSubview:unsolvedButton];
     
     currentY += buttonHeight + kMXEvaluationVerticalSpacing;
   }
@@ -292,9 +309,9 @@ static CGFloat const kMXEvaluationSectionSpacing = 16.0; // 区块之间的间�
   // 表情容器
   CGFloat emojiContainerHeight = 70;
   UIView *emojiContainer = [[UIView alloc]
-      initWithFrame:CGRectMake(0, currentY, customView.frame.size.width,
+      initWithFrame:CGRectMake(0, currentY, contentView.frame.size.width,
                                emojiContainerHeight)];
-  [customView addSubview:emojiContainer];
+  [contentView addSubview:emojiContainer];
 
   // 加载雪碧图资源
   UIImage *spriteSheetImage =
@@ -306,7 +323,7 @@ static CGFloat const kMXEvaluationSectionSpacing = 16.0; // 区块之间的间�
   // 创建未选中和选中的表情图标
   NSMutableArray *imageViews = [NSMutableArray arrayWithCapacity:emojiCount];
   CGFloat emojiSize = 44; // 每个表情大小
-  CGFloat spacing = (customView.frame.size.width - emojiSize * emojiCount) /
+  CGFloat spacing = (contentView.frame.size.width - emojiSize * emojiCount) /
                     (emojiCount + 1); // 间距
 
   // 在雪碧图中表情的大小和位置
@@ -378,23 +395,23 @@ static CGFloat const kMXEvaluationSectionSpacing = 16.0; // 区块之间的间�
 
   // 添加表情评价名称标签
   UILabel *nameLabel = [[UILabel alloc]
-      initWithFrame:CGRectMake(20, currentY, customView.frame.size.width - 40, 30)];
+      initWithFrame:CGRectMake(20, currentY, contentView.frame.size.width - 40, 30)];
   nameLabel.textAlignment = NSTextAlignmentCenter;
   nameLabel.font = [UIFont systemFontOfSize:15.0];
   nameLabel.textColor = [UIColor darkGrayColor];
   nameLabel.hidden = YES; // 初始状态隐藏
-  [customView addSubview:nameLabel];
+  [contentView addSubview:nameLabel];
   levelNameLabel = nameLabel;
   currentY += 30 + kMXEvaluationElementSpacing;
 
   // 创建标签容器视图
   UIView *tagContainer = [[UIView alloc]
       initWithFrame:CGRectMake(kMXEvaluationHorizontalSpacing, currentY,
-                               customView.frame.size.width -
+                               contentView.frame.size.width -
                                    kMXEvaluationHorizontalSpacing * 2,
                                50)]; // 初始高度设为50，后面会根据实际内容调整
   tagContainer.hidden = YES; // 初始状态隐藏
-  [customView addSubview:tagContainer];
+  [contentView addSubview:tagContainer];
   tagsContainerView = tagContainer;
   currentY += 50 + kMXEvaluationElementSpacing;
 
@@ -402,7 +419,7 @@ static CGFloat const kMXEvaluationSectionSpacing = 16.0; // 区块之间的间�
   CGFloat inputHeight = 70; // 设置一个合理的输入框高度
   commentTextField = [[UITextField alloc]
       initWithFrame:CGRectMake(kMXEvaluationHorizontalSpacing, currentY,
-                               customView.frame.size.width -
+                               contentView.frame.size.width -
                                    kMXEvaluationHorizontalSpacing * 2,
                                inputHeight)];
   commentTextField.placeholder = @"你可以输入评价备注(30字以内)";
@@ -425,17 +442,17 @@ static CGFloat const kMXEvaluationSectionSpacing = 16.0; // 区块之间的间�
   commentTextField.leftView = paddingView;
   commentTextField.leftViewMode = UITextFieldViewModeAlways;
   commentTextField.hidden = YES; // 初始隐藏
-  [customView addSubview:commentTextField];
+  [contentView addSubview:commentTextField];
 
   // 添加点击手势来收起键盘
   UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismissKeyboard:)];
   tapGesture.cancelsTouchesInView = NO; // 不取消其他控件的点击事件
-  [customView addGestureRecognizer:tapGesture];
+  [contentView addGestureRecognizer:tapGesture];
 
   // 初始计算并设置自适应高度
-  [self updateCustomViewHeight:customView];
+  [self updateCustomViewHeight];
 
-  return customView;
+  return scrollView;
 }
 
 - (void)showEvaluationAlertView {
@@ -568,8 +585,7 @@ static CGFloat const kMXEvaluationSectionSpacing = 16.0; // 区块之间的间�
     // 清空已选标签
     [self clearSelectedTags];
     // 重新计算弹窗高度
-    UIView *customView = commentTextField.superview;
-    [self updateCustomViewHeight:customView];
+    [self updateCustomViewHeight];
     // 注意：不清空评价内容，以便用户重新选择表情时保留评价内容
   } else {
     // 设置新表情为选中状态
@@ -586,8 +602,7 @@ static CGFloat const kMXEvaluationSectionSpacing = 16.0; // 区块之间的间�
       commentTextField.hidden = NO;
       
       // 更新整体布局高度
-      UIView *customView = commentTextField.superview;
-      [self updateCustomViewHeight:customView];
+      [self updateCustomViewHeight];
     }
   }
 }
@@ -741,10 +756,7 @@ static CGFloat const kMXEvaluationSectionSpacing = 16.0; // 区块之间的间�
   }
   
   // 重新计算弹窗高度，确保界面正确收缩
-  if (commentTextField && commentTextField.superview) {
-    UIView *customView = commentTextField.superview;
-    [self updateCustomViewHeight:customView];
-  }
+  [self updateCustomViewHeight];
 }
 
 // 更新评价名称标签
@@ -789,7 +801,7 @@ static CGFloat const kMXEvaluationSectionSpacing = 16.0; // 区块之间的间�
 
   // 动态调整视图布局和高度
   [self updateViewLayout];
-  [self updateCustomViewHeight:tagsContainerView.superview];
+  [self updateCustomViewHeight];
 }
 
 // 清空选中的标签
@@ -1097,28 +1109,44 @@ static CGFloat const kMXEvaluationSectionSpacing = 16.0; // 区块之间的间�
 }
 
 // 更新自定义视图高度
-- (void)updateCustomViewHeight:(UIView *)customView {
+- (void)updateCustomViewHeight {
+  if (!self.scrollView || !self.contentView) {
+    return;
+  }
+  
   CGFloat bottomPadding = 20; // 底部预留空间
   CGFloat maxContentHeight = 0;
+  CGFloat maxHeight = 500; // 设置最大高度为500
   
   // 先调整布局确保所有元素位置正确
   [self updateViewLayout];
   
-  // 遍历所有子视图，找到最大的Y坐标
-  for (UIView *subview in customView.subviews) {
+  // 遍历内容视图的所有子视图，找到最大的Y坐标
+  for (UIView *subview in self.contentView.subviews) {
     if (!subview.hidden) {
-      CGFloat subviewMaxY = subview.frame.origin.y + subview.frame.size.height;
+      CGFloat subviewMaxY = CGRectGetMaxY(subview.frame);
       maxContentHeight = MAX(maxContentHeight, subviewMaxY);
     }
   }
   
-  // 计算实际需要的高度
-  CGFloat finalHeight = maxContentHeight + bottomPadding;
+  // 计算实际需要的内容高度
+  CGFloat contentHeight = maxContentHeight + bottomPadding;
   
-  // 更新customView的高度
-  CGRect frame = customView.frame;
-  frame.size.height = finalHeight;
-  customView.frame = frame;
+  // 更新 contentView 的高度
+  CGRect contentFrame = self.contentView.frame;
+  contentFrame.size.height = contentHeight;
+  self.contentView.frame = contentFrame;
+  
+  // 设置 scrollView 的 contentSize
+  self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width, contentHeight);
+  
+  // 更新 scrollView 的高度
+  CGRect scrollFrame = self.scrollView.frame;
+  scrollFrame.size.height = MIN(contentHeight, maxHeight);
+  self.scrollView.frame = scrollFrame;
+  
+  // 当内容不超过最大高度时，禁用滚动
+  self.scrollView.scrollEnabled = (contentHeight > maxHeight);
   
   // 通知CustomIOSAlertView重新布局对话框
   [self updateAlertViewLayout];

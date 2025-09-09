@@ -46,7 +46,9 @@
                 @(MXChatEventTypeAutomationRedirect):[NSString stringWithFormat:[MXBundleUtil localizedStringForKey:@"mx_direct_content"], self.userName],
                 @(MXChatEventTypeAutomationAssign):[NSString stringWithFormat:[MXBundleUtil localizedStringForKey:@"mx_direct_content"], self.userName],
                 @(MXChatEventTypeAiAutomationRedirect):[NSString stringWithFormat:[MXBundleUtil localizedStringForKey:@"mx_direct_content"], self.userName],
-                @(MXChatEventTypeAiAutomationAssign):[NSString stringWithFormat:[MXBundleUtil localizedStringForKey:@"mx_direct_content"], self.userName]
+                @(MXChatEventTypeAiAutomationAssign):[NSString stringWithFormat:[MXBundleUtil localizedStringForKey:@"mx_direct_content"], self.userName],
+                @(MXChatEventTypeAgentToClientMsgDelivered):@"",
+                @(MXChatEventTypeAgentToClientMsgRead):@""
                 };
     }
     

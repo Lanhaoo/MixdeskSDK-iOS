@@ -29,6 +29,16 @@ typedef NS_ENUM(NSUInteger, MXFileDownloadStatus) {
 @property (nonatomic, copy) NSString *timeBeforeExpire;
 @property (nonatomic, assign) BOOL isExpired;
 
+/**
+ * @brief 消息的已读状态 (2: 已送达, 3: 已读)
+ */
+@property (nonatomic, assign) NSNumber *readStatus;
+
+/**
+ * @brief 已读状态指示器的frame
+ */
+@property (nonatomic, readonly, assign) CGRect readStatusIndicatorFrame;
+
 #pragma mark - registered callbacks
 @property (nonatomic, copy) void(^fileDownloadStatusChanged)(MXFileDownloadStatus);
 @property (nonatomic, copy) void(^needsToUpdateUI)(void);

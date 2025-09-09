@@ -13,15 +13,10 @@
 #import "MXStringSizeUtil.h"
 #include <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#import <CoreText/CoreText.h>
 
 // 增加常量定义
-// 字体属性常量定义
-static NSString *const kNSFontAttributeName = @"NSFont";
-static NSString *const kNSParagraphStyleAttributeName = @"NSParagraphStyle";
-// 文本绘制选项常量定义
-static NSUInteger const kNSStringDrawingUsesLineFragmentOrigin = 1;
-// 换行模式常量定义
-static NSUInteger const kNSLineBreakByWordWrapping = 0;
+// 注意：使用系统预定义的常量，不再自定义
 
 static CGFloat const kMXEvaluationCellLabelVerticalMargin = 6.0;
 static CGFloat const kMXEvaluationCellLabelHorizontalMargin = 8.0;
@@ -130,6 +125,100 @@ CGFloat const kMXEvaluationCellFontSize = 14.0;
 @end
 
 @implementation MXEvaluationResultCellModel
+
+/**
+ * 使用Core Text精确计算文本行数
+ * @param text 要计算的文本
+ * @param font 字体
+ * @param width 可用宽度
+ * @return 精确的行数
+ */
+- (NSInteger)calculateExactLineCountForText:(NSString *)text 
+                                      font:(UIFont *)font 
+                                     width:(CGFloat)width {
+    if (!text || text.length == 0) {
+        return 0;
+    }
+    
+    // 创建CTFont
+    CTFontRef ctFont = CTFontCreateWithName((__bridge CFStringRef)font.fontName, font.pointSize, NULL);
+    
+    // 创建段落样式
+    CTTextAlignment alignment = kCTTextAlignmentCenter;
+    CTParagraphStyleSetting alignmentSetting;
+    alignmentSetting.spec = kCTParagraphStyleSpecifierAlignment;
+    alignmentSetting.valueSize = sizeof(CTTextAlignment);
+    alignmentSetting.value = &alignment;
+    
+    CTParagraphStyleSetting lineBreakSetting;
+    CTLineBreakMode lineBreakMode = kCTLineBreakByWordWrapping;
+    lineBreakSetting.spec = kCTParagraphStyleSpecifierLineBreakMode;
+    lineBreakSetting.valueSize = sizeof(CTLineBreakMode);
+    lineBreakSetting.value = &lineBreakMode;
+    
+    CTParagraphStyleSetting settings[] = {alignmentSetting, lineBreakSetting};
+    CTParagraphStyleRef paragraphStyle = CTParagraphStyleCreate(settings, 2);
+    
+    // 创建属性字典
+    NSDictionary *attributes = @{
+        (__bridge NSString *)kCTFontAttributeName: (__bridge id)ctFont,
+        (__bridge NSString *)kCTParagraphStyleAttributeName: (__bridge id)paragraphStyle
+    };
+    
+    // 创建NSAttributedString
+    NSAttributedString *attributedString = [[NSAttributedString alloc] initWithString:text attributes:attributes];
+    
+    // 创建CTFramesetter
+    CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString((__bridge CFAttributedStringRef)attributedString);
+    
+    // 创建路径
+    CGPathRef path = CGPathCreateWithRect(CGRectMake(0, 0, width, CGFLOAT_MAX), NULL);
+    
+    // 创建CTFrame
+    CTFrameRef frame = CTFramesetterCreateFrame(framesetter, CFRangeMake(0, 0), path, NULL);
+    
+    // 获取行数组
+    CFArrayRef lines = CTFrameGetLines(frame);
+    CFIndex lineCount = CFArrayGetCount(lines);
+    
+    // 清理资源
+    CFRelease(frame);
+    CFRelease(path);
+    CFRelease(framesetter);
+    CFRelease(paragraphStyle);
+    CFRelease(ctFont);
+    
+    return (NSInteger)lineCount;
+}
+
+/**
+ * 精确计算文本高度的方法 - 通过精确行数计算
+ * @param text 要计算的文本
+ * @param font 字体
+ * @param width 可用宽度
+ * @return 精确的文本高度
+ */
+- (CGFloat)preciseTextHeightForText:(NSString *)text 
+                              font:(UIFont *)font 
+                             width:(CGFloat)width {
+    if (!text || text.length == 0) {
+        return 0;
+    }
+    
+    // 使用Core Text精确计算行数
+    NSInteger lineCount = [self calculateExactLineCountForText:text font:font width:width];
+    
+    // 确保至少有一行
+    if (lineCount <= 0) {
+        lineCount = 1;
+    }
+    
+    // 计算单行高度
+    CGFloat lineHeight = font.lineHeight;
+    
+    // 返回精确的总高度：行数 × 每行高度
+    return lineCount * lineHeight;
+}
 
 #pragma initialize
 /**
@@ -358,29 +447,20 @@ CGFloat const kMXEvaluationCellFontSize = 14.0;
     if (self.tagNames && self.tagNames.count > 0) {
       NSString *tagsString = [self.tagNames componentsJoinedByString:@", "];
       
-      // 计算标签文本高度
+      // 使用精确的文本高度计算方法
       UIFont *tagFont = [UIFont systemFontOfSize:kMXEvaluationCellFontSize];
-      NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-      paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
-      paragraphStyle.alignment = NSTextAlignmentCenter;
+      tagsHeight = [self preciseTextHeightForText:tagsString font:tagFont width:contentWidth];
       
-      NSDictionary *attributes = @{
-        kNSFontAttributeName: tagFont,
-        kNSParagraphStyleAttributeName: paragraphStyle
-      };
-      
-      CGRect tagTextRect = [tagsString boundingRectWithSize:CGSizeMake(contentWidth, CGFLOAT_MAX)
-                                                  options:NSStringDrawingUsesLineFragmentOrigin
-                                               attributes:attributes
-                                                  context:nil];
-      
-      tagsHeight = ceilf(tagTextRect.size.height) + 8.0; // 标签行高度
+      // 确保最小高度为字体行高
+      if (tagsHeight <= 0) {
+        tagsHeight = ceilf(tagFont.lineHeight);
+      }
       
       // 标签行布局
       self.tagsLabelFrame = CGRectMake(kMXEvaluationCommentHorizontalSpacing,
                                        tagsY,
                                        contentWidth,
-                                       tagsHeight);
+                                       tagsHeight + 20);
     } else {
       // 没有标签时，设置为空
       self.tagsLabelFrame = CGRectZero;
@@ -388,28 +468,19 @@ CGFloat const kMXEvaluationCellFontSize = 14.0;
     }
     
     // 计算第三行（评论行）的布局
-    CGFloat commentY = tagsY + tagsHeight + (tagsHeight > 0 ? verticalSpacing : 0);
+    CGFloat commentY = tagsY + tagsHeight + 20 + (tagsHeight > 0 ? verticalSpacing : 0);
     CGFloat commentHeight = 0;
     
     // 检查是否有评论内容
     if (comment.length > 0) {
-      // 计算评论文本的高度
+      // 使用精确的文本高度计算方法
       UIFont *commentFont = [UIFont systemFontOfSize:kMXEvaluationCellFontSize];
-      NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-      paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
-      paragraphStyle.alignment = NSTextAlignmentCenter;
+      commentHeight = [self preciseTextHeightForText:comment font:commentFont width:contentWidth];
       
-      NSDictionary *attributes = @{
-        kNSFontAttributeName: commentFont,
-        kNSParagraphStyleAttributeName: paragraphStyle
-      };
-      
-      CGRect commentTextRect = [comment boundingRectWithSize:CGSizeMake(contentWidth, CGFLOAT_MAX)
-                                                   options:kNSStringDrawingUsesLineFragmentOrigin
-                                                attributes:attributes
-                                                   context:nil];
-      
-      commentHeight = ceilf(commentTextRect.size.height) + 8.0; // 评论行高度
+      // 确保最小高度为字体行高
+      if (commentHeight <= 0) {
+        commentHeight = ceilf(commentFont.lineHeight);
+      }
       
       // 设置评论行布局
       self.commentLabelFrame = CGRectMake(kMXEvaluationCommentHorizontalSpacing,
@@ -478,13 +549,18 @@ CGFloat const kMXEvaluationCellFontSize = 14.0;
   return false;
 }
 
-- (NSString *)getCellMessageId {
-  return @"";
+- (NSString *)getMessageReadStatus {
+    return @"";
 }
 
 - (NSString *)getMessageConversionId {
   return @"";
 }
+
+- (NSString *)getCellMessageId {
+    return @"";
+}
+
 
 // 已在上面实现了updateCellFrameWithCellWidth:方法
 
