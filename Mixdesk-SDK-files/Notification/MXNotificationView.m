@@ -1,10 +1,3 @@
-//
-//  MXNotificationView.m
-//  MXEcoboostSDK-test
-//
-//  Created by shunxingzhang on 2022/6/15.
-//  Copyright © 2022 Mixdesk Inc. All rights reserved.
-//
 
 #import "MXNotificationView.h"
 #import "MXAssetUtil.h"
