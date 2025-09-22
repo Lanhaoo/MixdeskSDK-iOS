@@ -260,6 +260,8 @@ static CGFloat const kMXChatViewInputBarHeight = 80.0;
 
   willDisapper = YES;
   [self.keyboardView endListeningForKeyboard];
+    ///新增一个通知解决 键盘弹起后输入框和键盘之间有偏移 的问题
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"chatViewWillDisappear" object:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -271,6 +273,8 @@ static CGFloat const kMXChatViewInputBarHeight = 80.0;
       fillTextDraftToFiledIfExists:(UITextField *)
                                        [(MXTabInputContentView *)self.bottomBar
                                                .contentView textField]];
+    ///新增一个通知解决 键盘弹起后输入框和键盘之间有偏移 的问题
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"chatViewWillAppear" object:nil];
 }
 
 - (void)didReceiveMemoryWarning {

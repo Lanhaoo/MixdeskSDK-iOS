@@ -747,4 +747,6 @@ VoiceConvert |  N/A | AMR 和 WAV 语音格式的互转；没找到出处，哪�
 
 **v1.0.7  2025 年 9 月 9 日**
 * SDK 新增联系人已读和未读功能
+* 更新
+* pod update Mixdesk --repo-update
 
