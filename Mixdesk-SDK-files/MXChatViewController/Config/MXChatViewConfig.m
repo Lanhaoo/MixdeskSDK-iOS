@@ -78,7 +78,7 @@ NSString * const MXChatTableViewShouldRefresh = @"MXChatTableViewShouldRefresh";
     self.enableTopAutoRefresh      = true;
     self.isPushChatView            = true;
     self.enableShowNewMessageAlert = true;
-    self.enableEvaluationButton    = true;
+    self.enableEvaluationButton    = false;
     self.shouldUploadOutgoingAvartar = NO;
     
     self.maxVoiceDuration               = 60;

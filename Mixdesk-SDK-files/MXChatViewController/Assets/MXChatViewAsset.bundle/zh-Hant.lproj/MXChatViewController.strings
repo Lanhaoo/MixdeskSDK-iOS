@@ -1,183 +1,185 @@
-"new_message"         = "請輸入...";
+"new_message"         = "Send your message...";
 
-"record_speak"        = "按住 說話";
+"record_speak"        = "Hold to talk";
 
-"record_end"          = "鬆開 結束";
+"record_end"          = "Release to send";
 
-"cancel"              = "取消";
+"cancel"              = "cancel";
 
-"select_gallery"      = "從相冊選取";
+"select_gallery"      = "Albums";
 
-"select_camera"       = "相機";
+"select_camera"       = "Camera";
 
-"wait_agent"          = "正在分配客服...";
+"wait_agent"          = "Allocating an agent for you...";
 
-"waiting_title"       = "排隊等待中...";
+"waiting_title"       = "Waiting in line...";
 
-"not_access_camera"   = "請在系統設置中允許該App訪問相機";
+"not_access_camera"   = "Please go to Settings — Privacy — Photos. Then select ON for This App.";
 
-"not_access_photos"   = "請在系統設置中允許該App訪問相冊";
+"not_access_photos"   = "Please go to Settings — Privacy — Camera. Then select ON for This App.";
 
-"display_new_message" = "下方有新消息";
+"display_new_message" = "Received a new message";
 
-"display_video_expired" = "視頻已過期";
+"display_video_expired" = "Video has expired";
 
-"display_video_more_than_limit" = "視頻超過最大限制400M";
+"display_video_more_than_limit" = "Video more than the maximum 400M";
 
-"network_jam"         = "網絡不太通常，請檢查網絡";
+"network_jam"         = "Please check your internet connection and try again.";
 
-"simulator_not_support_camera" = "模擬器無法使用相機";
+"simulator_not_support_camera"      = "Simulator cannot access camera";
 
-"simulator_not_support_microphone" = "模擬器無法使用麥克風";
+"simulator_not_support_microphone"  = "Simulator cannot access microphone";
 
-"recode_time_too_short" = "錄音時間太短";
+"recode_time_too_short" = "Message too short";
 
-"record_cancel_swipe"   = "上滑手指，取消發送";
+"record_cancel_swipe"   = "Swipe up to cancel";
 
-"record_cancel_realse"  = "松開手指，取消發送";
+"record_cancel_realse"  = "Release to cancel";
 
-"save_photo_error"      = "抱歉，保存失敗";
+"save_photo_error"      = "Sorry, failed to save photo";
 
-"save_photo_success"    = "已保存圖片到本地相冊";
+"save_photo_success"    = "Saved photo";
 
-"save_text_success"     = "已複制";
+"save_text_success"     = "Copied";
 
-"save_photo"            = "保存";
+"save_photo"            = "save";
 
-"save_text"             = "複制";
+"save_text"             = "copy";
 
-"record_error"          = "抱歉，錄音出現了點小問題-_-";
+"record_error"          = "Sorry, failed to record-_-";
 
-"user_confirm"          = "知道了";
+"user_confirm"          = "OK";
 
-"no_more_messages"      = "没有更多消息啦~";
+"no_more_messages"      = "No more messages";
 
 "welcome_chat"          = "";
 
-"default_assistant"     = "Mixdesk小助手";
+"default_assistant"     = "Assistant";
 
-"no_agent_tips"         = "抱歉，現在沒有客服人員在線\n妳可以留下妳的聯系方式，我們會盡快聯系妳~";
+"no_agent_title"        = "Leave message";
 
-"retry_send_message"    = "重新發送嗎？";
+"no_agent_tips"         = "Sorry, there are no agents.\nPlease send your contact information to us. We will contact you as soon as possible.";
 
-"alert_view_cancel"     = "取消";
-"alert_view_send"     = "提交";
+"retry_send_message"    = "Resend message?";
 
-"alert_view_confirm"    = "確定";
+"alert_view_cancel"     = "cancel";
+"alert_view_send"     = "send";
 
-"cannot_refresh"        = "刷新不了啦~";
+"alert_view_confirm"    = "confirm";
 
-"make_call_to"          = "撥打至 ";
+"cannot_refresh"        = "Cannot refresh anymore~";
 
-"send_message_to"       = "短信至 ";
+"make_call_to"          = "Call ";
 
-"open_url_by_safari"    = "用Safari打開該鏈接";
+"send_message_to"       = "Send a message to ";
 
-"make_email_to"         = "向該email發送郵件";
+"open_url_by_safari"    = "Open this url by Safari";
 
-"load_history_message_error"    = "抱歉，沒有正確獲取到歷史消息-_-";
+"make_email_to"         = "Send email";
 
-"microphone_denied"     = "請在系統設置中允許該App訪問麥克風";
+"load_history_message_error"    = "Sorry, failed to load history messages";
 
-"mixdesk_communication_failed" = "抱歉，連接通信網絡可能有問題，請更換網絡試壹下。";
+"microphone_denied"     = "Please go to Settings. And open microphone permission for This App.";
 
-"mixdesk_evaluation_sheet"     = "評價";
+"mixdesk_communication_failed" = "Sorry, cannot access communication server, please change your network and retry.";
 
-"mixdesk_redirect_sheet"     = "轉人工";
+"mixdesk_evaluation_sheet"     = "Evaluate";
 
-"file_download_file_is_expired" = "文件已過期";
-"file_download_canceld" = "已取消下載";
-"file_download_failed" = "下載失敗";
-"file_download_downloading" = "下載中...";
-"file_download_complete" = "下載完成";
-"file_upload_limit" = "超過最大上傳文件限制";
-"file_download_ %@ ∙ %@overdue" = "%@ ∙ %@ 小時後過期";
+"mixdesk_redirect_sheet"     = "Redirect";
 
-"message_tips_send_message_fail_listed_in_black_list" = "對不起，當前客服系統暫時無法使用。";
+"file_download_file_is_expired" = "File is overdue";
+"file_download_canceld" = "Download canceled";
+"file_download_failed" = "Download fail";
+"file_download_downloading" = "Downloading...";
+"file_download_complete" = "Download complete";
+"file_upload_limit" = "Exceeded the maximum upload file limit";
+"file_download_ %@ ∙ %@overdue" = "%@ ∙ overdue in %@ hours";
 
-"message_tips_online_failed_listed_in_black_list" = "對不起，當前客服系統暫時無法使用。";
+"message_tips_send_message_fail_listed_in_black_list" = "Sorry, the CS system is down.";
 
-"cannot_text_client_is_onlining"  = "正在為您分配客服，請稍後重發。";
+"message_tips_online_failed_listed_in_black_list" = "Sorry, the CS system is down.";
 
-"send_to_fast"  = "您發送的太快啦，請休息壹下吧~";
-"submit" = "提交";
-"param_not_allow_null" = "%@ 不允許為空";
-"contact_at_lease_enter_one" = "請至少填寫一種聯繫方式";
-"submit_failure" = "提交失敗";
-"add_picture" = "添加圖片";
-"tel" = "電話";
-"tel_placeholder" = "請輸入你的電話";
-"email" = "郵箱";
-"email_placeholder" = "請輸入您的郵箱";
+"cannot_text_client_is_onlining"  = "Allocating an agent for you. Please resend later.";
+
+"send_to_fast"  = "Send too fast. Take a break :)";
+"leave_a_message" = "Leave a message";
+"submit" = "submit";
+"leave_a_message_placeholder" = "Please enter your message";
+"param_not_allow_null" = "%@ can not be empty";
+"contact_at_lease_enter_one" = "Please enter at lease one contact info";
+"submit_failure" = "Submit failed";
+"add_picture" = "Add picture";
+"tel" = "Phone";
+"tel_placeholder" = "Please enter your phone number";
+"email" = "Email";
+"email_placeholder" = "Please enter your email";
 "qq" = "QQ";
-"qq_placeholder" = "請輸入您的 QQ 號";
-"wechat" = "微信";
-"wechat_placeholder" = "請輸入您的微信號";
-"name" = "姓名";
-"name_placeholder" = "請輸入姓名";
-"gender" = "性别";
-"age" = "年齡";
-"age_placeholder" = "請輸入您的年齡";
-"weibo" = "微博";
-"weibo_placeholder" = "請輸入您的微博號";
-"address" = "地址";
-"address_placeholder" = "請輸入您的地址";
-"comment" = "備註";
-"comment_placeholder" = "請輸入您的備註";
-"contact" = "聯系人";
-"contact_placeholder" = "請輸入您的聯系人";
-"man" = "男";
-"woman" = "女";
-"time_placeholder" = "年-月-日";
+"qq_placeholder" = "Please enter your QQ number";
+"wechat" = "WeChat";
+"wechat_placeholder" = "Please enter your WeChat account";
+"name" = "Name";
+"name_placeholder" = "Please enter your name";
+"gender" = "Gender";
+"age" = "Age";
+"age_placeholder" = "Please enter your age";
+"weibo" = "WeiBo";
+"weibo_placeholder" = "Please enter your WeiBo account";
+"address" = "Address";
+"address_placeholder" = "Please enter your address";
+"comment" = "Comment";
+"comment_placeholder" = "Please enter your comment";
+"contact" = "contact";
+"contact_placeholder" = "Please enter your contact";
+"man" = "Man";
+"woman" = "Woman";
+"time_placeholder" = "Year-Month-Day";
 
-"product_message_sales" = "銷量";
-"product_message_check_details" = "查看詳情";
-"next_page" = "下一頁";
-"last_page" = "上一頁";
+"product_message_sales" = "Sales";
+"product_message_check_details" = "Check details";
+"next_page" = "Next";
+"last_page" = "Previous";
 
 //询前表单
-"pre_chat_list_title" = "客服支持";
-"pre_chat_form_title" =  "請填寫以下內容";
-"pre_chat_form_mutiple_selection_label" = "(多選)";
-"pre_chat_form_black_alert_label" = "紅色文字的地方為必填項，請填寫完整";
+"pre_chat_list_title" = "Client Support";
+"pre_chat_form_title" =  "Please fill those blanks";
+"pre_chat_form_mutiple_selection_label" = "(multiple)";
+"pre_chat_form_black_alert_label" = "Please complete the red blank";
 
 //pull refresh
-"pull_refresh_normal" = "下拉加載歷史消息";
-"pull_refresh_triggered" = "鬆開加載歷史消息";
-
+"pull_refresh_normal" = "Pull to load";
+"pull_refresh_triggered" = "Realse to load";
 //xlp
 // 请输入消息
-"input_content" = "輸入訊息...";
+"input_content" = "Please input your content...";
 // 服务连接中,请稍候
-"service_connectting_wait" = "服務連接中,請稍後...";
+"service_connectting_wait" = "Service is connectting,please waitting";
 
-"network_connect_error" = "當前網絡不可用，請檢查網絡設定";
-"network_connect_warning" = "當前網絡連接中，接收消息可能會有遺漏";
+"network_connect_error" = "The network is not available, Please check the network Settings";
+"network_connect_warning" = "Network is connectting，Message may be missing";
 
-"mx_direct_content" = "接下来由 %@ 为你服务";
-"mx_send" = "发送";
-"mx_delete" = "删除";
-"mx_record_count_down" = "录音将在%li秒后结束";
-"mx_record_will_send" = "录音将在%li秒后发送";
-"mx_audio_status_normal" = "按住说话";
-"mx_display_preview" = "显示预览";
-"mx_open_file" = "打开文件";
+"mx_direct_content" = "You will be assisted by %@";
+"mx_send" = "Send";
+"mx_delete" = "Delete";
+"mx_record_count_down" = "You can talk for %li more seconds";
+"mx_record_will_send" = "Recording will be send in %li seconds";
+"mx_audio_status_normal" = "Press to talk";
+"mx_display_preview" = "Display the preview";
+"mx_open_file" = "Open the file";
 
-"mx_solved" = "问题已解决";
-"mx_unsolved" = "问题未解决";
-"mx_commited" = "已提交";
+"mx_solved" = "solved";
+"mx_unsolved" = "unsolved";
+"mx_commited" = "commited";
 
-"mx_evaluation_title" = "妳對本次服務滿意麽?";
-"mx_evaluation_good" = "好評";
-"mx_evaluation_middle" = "中評";
-"mx_evaluation_bad" = "差評";
-"mx_evaluation_content" = "填寫評價內容(可選)";
+"mx_evaluation_title" = "Are you satisfied with this service?";
+"mx_evaluation_good" = "good";
+"mx_evaluation_middle" = "middle";
+"mx_evaluation_bad" = "bad";
+"mx_evaluation_content" = "input content(optional)";
 
-"waiting_agent_send_message" = "正在排隊，請等待客服接取後發送訊息";
-"pre_chat_form_input" = "輸入";
+"waiting_agent_send_message" = "Queuing, please wait";
+"pre_chat_form_input" = "input";
 
-"mx_evaluation_please_select_level" = "請選擇評價等級";
-"mx_evaluation_please_select_tag" = "請選擇評價標籤";
+"mx_evaluation_please_select_level" = "Please select the evaluation";
+"mx_evaluation_please_select_tag" = "Please select the tag";
 
-"mx_ip_restricted_message" = "抱歉，當前系統暫不支持通過中國大陸地區的網絡發送訊息，感謝您的理解";
-
+"mx_ip_restricted_message" = "Sorry, the current system does not support sending messages through networks in mainland China. Thank you for your understanding.";
